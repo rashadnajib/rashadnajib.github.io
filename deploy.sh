@@ -10,6 +10,10 @@ set -euo pipefail
 
 REPO="${1:-permis-lb}"
 DOMAIN="${2:-}"
+# --user-site resolves to <your-login>.github.io, so the shortest URL works
+# regardless of what the GitHub username actually is.
+USER_SITE=0
+[ "$REPO" = "--user-site" ] && { USER_SITE=1; REPO=""; }
 GH="/c/Program Files/GitHub CLI/gh.exe"
 [ -x "$GH" ] || GH="$(command -v gh)"
 
@@ -23,6 +27,8 @@ fi
 
 USER=$("$GH" api user --jq .login)
 echo "==> GitHub user: $USER"
+[ "$USER_SITE" = "1" ] && REPO="$USER.github.io"
+echo "==> Repo name: $REPO"
 
 # A custom domain is served only if a CNAME file ships with the site.
 if [ -n "$DOMAIN" ]; then
