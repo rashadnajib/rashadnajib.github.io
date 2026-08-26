@@ -1,0 +1,18 @@
+{
+  "name": "Permis LB — Lebanese driving theory practice",
+  "short_name": "Permis LB",
+  "description": "Free practice exams for the Lebanese driving theory test — 340 official questions in Arabic, French and English, with road signs and instant correction.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#16181d",
+  "theme_color": "#2953a8",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
