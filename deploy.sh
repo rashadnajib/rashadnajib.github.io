@@ -70,6 +70,8 @@ if [ -n "$DOMAIN" ]; then
            echo "    A  @  185.199.111.153" ;;
   esac
   echo "  HTTPS turns on automatically once DNS resolves (can take a few hours)."
+elif [ "$REPO" = "$USER.github.io" ]; then
+  echo "  Site:  https://$USER.github.io"
 else
   echo "  Site:  https://$USER.github.io/$REPO/"
 fi
