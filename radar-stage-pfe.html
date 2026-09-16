@@ -1,0 +1,776 @@
+<title>Radar Stage PFE 90</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --ground:#F2F3F5; --panel:#FFFFFF; --panel-2:#E9EBEF;
+    --ink:#161A20; --ink-2:#4E5663; --ink-3:#7B8492;
+    --rule:#D3D8DF; --signal:#1F4FD8; --signal-soft:#E3E9FC;
+    --near:#0E7C5A; --mid:#B06B00; --far:#6B4EA8; --ch:#B3261E;
+    --ok:#0E7C5A; --ok-soft:#DCF0E8; --warn:#B06B00; --warn-soft:#FBEEDA;
+    --focus:#1F4FD8;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#0F1216; --panel:#171B21; --panel-2:#1F242C;
+      --ink:#E8EBEF; --ink-2:#A6AEBB; --ink-3:#767F8C;
+      --rule:#2A313A; --signal:#7FA0FF; --signal-soft:#1B2440;
+      --near:#4FCB9B; --mid:#E0A64A; --far:#B29AE8; --ch:#F08079;
+      --ok:#4FCB9B; --ok-soft:#143026; --warn:#E0A64A; --warn-soft:#2E2413;
+      --focus:#7FA0FF;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0F1216; --panel:#171B21; --panel-2:#1F242C;
+    --ink:#E8EBEF; --ink-2:#A6AEBB; --ink-3:#767F8C;
+    --rule:#2A313A; --signal:#7FA0FF; --signal-soft:#1B2440;
+    --near:#4FCB9B; --mid:#E0A64A; --far:#B29AE8; --ch:#F08079;
+    --ok:#4FCB9B; --ok-soft:#143026; --warn:#E0A64A; --warn-soft:#2E2413;
+    --focus:#7FA0FF;
+  }
+
+  body{background:var(--ground);color:var(--ink);font-family:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;font-size:15px;line-height:1.5;}
+  .wrap{max-width:1080px;margin:0 auto;padding-inline:20px;padding-block:0 56px;}
+  button{font-family:inherit;}
+  :focus-visible{outline:2px solid var(--focus);outline-offset:2px;}
+
+  header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--ground);border-bottom:1px solid var(--rule);padding-block:14px 12px;margin-inline:-20px;padding-inline:20px;}
+  .brand{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 14px;}
+  h1{font-family:Archivo,"IBM Plex Sans",sans-serif;font-weight:700;font-size:clamp(20px,4.4vw,27px);letter-spacing:-.02em;margin:0;text-wrap:balance;}
+  .stamp{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;color:var(--ink-3);letter-spacing:.02em;}
+  .stamp b{color:var(--ink-2);font-weight:500;}
+
+  .filters{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;}
+  .chip{font:500 12px/1 "IBM Plex Sans",sans-serif;border:1px solid var(--rule);background:var(--panel);color:var(--ink-2);border-radius:999px;padding:7px 12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
+  .chip:hover{border-color:var(--ink-3);color:var(--ink);}
+  .chip[aria-pressed="true"]{background:var(--signal-soft);border-color:var(--signal);color:var(--signal);}
+  .chip .n{font-family:"IBM Plex Mono",monospace;font-size:11px;opacity:.75;}
+  .sep{width:1px;background:var(--rule);margin:2px 5px;align-self:stretch;}
+
+  .counts{display:flex;flex-wrap:wrap;gap:0;margin-block:22px 8px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);}
+  .count{flex:1 1 130px;padding:12px 4px 13px;}
+  .count + .count{border-left:1px solid var(--rule);padding-left:14px;}
+  .count .v{font-family:"IBM Plex Mono",monospace;font-size:24px;font-variant-numeric:tabular-nums;line-height:1;}
+  .count .k{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);margin-top:6px;}
+
+  h2.zone{font-family:Archivo,sans-serif;font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin:30px 0 10px;display:flex;align-items:center;gap:10px;}
+  h2.zone::after{content:"";flex:1;height:1px;background:var(--rule);}
+  h2.zone .km{font-family:"IBM Plex Mono",monospace;letter-spacing:0;text-transform:none;font-size:11.5px;}
+
+  ul.list{list-style:none;margin:0;padding:0;display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:4px;overflow:hidden;}
+  li.offer{background:var(--panel);}
+  .summary{display:grid;grid-template-columns:5px 1fr auto;align-items:stretch;}
+  .band{background:var(--band,var(--ink-3));}
+  .body{padding:13px 16px;min-width:0;cursor:pointer;}
+  .rowtop{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 9px;}
+  .co{font-family:Archivo,sans-serif;font-weight:600;font-size:14.5px;letter-spacing:-.01em;}
+  .role{font-size:14px;color:var(--ink-2);min-width:0;overflow-wrap:anywhere;}
+  .meta{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:7px;font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-3);}
+  .meta span{white-space:nowrap;}
+  .meta .place{color:var(--ink-2);}
+  .dist{color:var(--band,var(--ink-3));font-weight:500;}
+  .tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px;align-items:center;}
+  .tag{font:500 10.5px/1 "IBM Plex Sans",sans-serif;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--rule);border-radius:3px;padding:4px 6px;color:var(--ink-3);}
+  .tag.top{border-color:var(--signal);color:var(--signal);background:var(--signal-soft);}
+  .tag.alt{border-color:var(--ch);color:var(--ch);}
+  .tag.ch{border-color:var(--far);color:var(--far);}
+  .tag.done{border-color:var(--ok);color:var(--ok);background:var(--ok-soft);}
+  .tag.wait{border-color:var(--warn);color:var(--warn);background:var(--warn-soft);}
+  .go{display:flex;align-items:center;padding:0 16px;border-left:1px solid var(--rule);color:var(--signal);text-decoration:none;font:500 12px/1 "IBM Plex Sans",sans-serif;white-space:nowrap;}
+  .go:hover{background:var(--signal-soft);}
+  .go .src{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--ink-3);margin-left:8px;}
+
+  .detail{border-top:1px solid var(--rule);background:var(--panel-2);padding:14px 16px 16px;display:flex;flex-direction:column;gap:12px;}
+  .blockhead{font:600 10.5px/1 "IBM Plex Sans",sans-serif;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);}
+  .statusrow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+  .st{font:500 12px/1 "IBM Plex Sans",sans-serif;border:1px solid var(--rule);background:var(--panel);color:var(--ink-2);border-radius:4px;padding:8px 12px;cursor:pointer;}
+  .st:hover{border-color:var(--ink-3);color:var(--ink);}
+  .st[aria-pressed="true"]{background:var(--ink);color:var(--ground);border-color:var(--ink);}
+  .st.applied[aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:#fff;}
+  .st.replied[aria-pressed="true"]{background:var(--signal);border-color:var(--signal);color:#fff;}
+  .when{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);}
+
+  .letterbar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+  .btn{font:500 12px/1 "IBM Plex Sans",sans-serif;border:1px solid var(--signal);background:var(--signal-soft);color:var(--signal);border-radius:4px;padding:8px 12px;cursor:pointer;}
+  .btn:hover{background:var(--signal);color:#fff;}
+  .btn.ghost{border-color:var(--rule);background:var(--panel);color:var(--ink-2);}
+  .btn.ghost:hover{background:var(--panel);border-color:var(--ink-3);color:var(--ink);}
+  .btn.danger{border-color:var(--rule);background:var(--panel);color:var(--ink-3);}
+  .btn.danger:hover{border-color:var(--ch);color:var(--ch);background:var(--panel);}
+  .btn:disabled{opacity:.45;cursor:default;}
+  .dropzone{display:flex;justify-content:flex-end;border-top:1px dashed var(--rule);padding-top:11px;}
+  li.offer.gone .body{opacity:.5;}
+  .lstatus{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);}
+  textarea.letter{width:100%;box-sizing:border-box;min-height:340px;resize:vertical;background:var(--panel);color:var(--ink);border:1px solid var(--rule);border-radius:4px;padding:14px 15px;font-family:"IBM Plex Sans",sans-serif;font-size:13.5px;line-height:1.62;}
+
+  .empty{background:var(--panel);border:1px dashed var(--rule);border-radius:4px;padding:26px;text-align:center;color:var(--ink-3);font-size:13.5px;}
+  .syswarn{margin-block:10px 0;border-left:3px solid var(--warn);background:var(--warn-soft);color:var(--ink-2);padding:9px 12px;font-size:12.5px;border-radius:0 4px 4px 0;}
+
+  footer{margin-top:40px;border-top:1px solid var(--rule);padding-top:16px;color:var(--ink-3);font-size:12.5px;}
+  footer p{margin:0 0 8px;max-width:64ch;}
+  footer code{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-2);}
+
+  @media (max-width:620px){
+    .summary{grid-template-columns:5px 1fr;}
+    .go{grid-column:2;border-left:0;border-top:1px solid var(--rule);padding:10px 16px;}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>Radar Stage PFE 90</h1>
+      <div class="stamp">Rachad · UTBM Systèmes Industriels · scan <b id="stamp">16.09.2026 · 17h40</b> · 2×/jour <b>10h00 &amp; 16h00</b></div>
+    </div>
+    <div class="filters" id="filters">
+      <button class="chip" data-f="zone" data-v="1" aria-pressed="false">Autour de Belfort <span class="n" id="n-z1"></span></button>
+      <button class="chip" data-f="zone" data-v="2" aria-pressed="false">Rhône-Alpes / Sud <span class="n" id="n-z2"></span></button>
+      <button class="chip" data-f="zone" data-v="3" aria-pressed="false">Suisse <span class="n" id="n-z3"></span></button>
+      <div class="sep"></div>
+      <button class="chip" data-f="start" data-v="jfm" aria-pressed="false">Début janv–mars <span class="n" id="n-jfm"></span></button>
+      <button class="chip" data-f="kind" data-v="stage" aria-pressed="false">Stage uniquement <span class="n" id="n-st"></span></button>
+      <button class="chip" data-f="top" data-v="1" aria-pressed="false">Grands groupes <span class="n" id="n-top"></span></button>
+      <div class="sep"></div>
+      <button class="chip" data-f="todo" data-v="1" aria-pressed="false">Pas encore postulé <span class="n" id="n-todo"></span></button>
+      <button class="chip" id="showgone" data-f="gone" data-v="1" aria-pressed="false" hidden>Offres retirées <span class="n" id="n-gone"></span></button>
+    </div>
+  </header>
+
+  <div id="sysnotes"></div>
+  <div class="counts" id="counts"></div>
+  <div id="results"></div>
+
+  <footer>
+    <p><b>Comment lire.</b> La barre de couleur à gauche donne l'éloignement depuis Belfort : <span style="color:var(--near)">vert ≤ 130 km</span>, <span style="color:var(--mid)">orange 130–400 km</span>, <span style="color:var(--far)">violet &gt; 400 km ou Suisse</span>. Les distances sont des estimations routières. Clique sur une offre pour ouvrir son suivi et sa lettre.</p>
+    <p><b>Retirer une offre</b> ne l'efface pas : elle passe dans « Offres retirées », en haut, et le scan de 10h et 16h ne la remettra pas dans la liste. Le bouton « Remettre dans la liste » annule.</p>
+    <p><b>Le PDF</b> est une lettre formelle A4, marges 22 mm, corps justifié, une page. La police est l'Helvetica intégrée au générateur, pas Calibri : sans tableau, sans image et sans en-tête, elle passe les ATS sans problème.</p>
+    <p><b>Le suivi est enregistré</b> côté serveur : tu retrouves tes statuts et tes lettres sur n'importe quel appareil, et ils survivent aux mises à jour de 10h et 16h.</p>
+    <p><b>Sources balayées.</b> <code>Indeed FR/CH · LinkedIn · Welcome to the Jungle · JobTeaser · Jooble · jobs.ch · iAgora</code> + pages carrières directes <code>GE Vernova · Alstom · Stellantis · Forvia · Schneider · Valeo · Volvo · Danone · Nestlé/Nespresso · ABB · Rolex · Richemont</code>.</p>
+    <p><b>Toujours vérifier la date.</b> Beaucoup d'offres restent en ligne après pourvoi. La date affichée est celle de publication, pas de clôture.</p>
+  </footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+/* ───────── Données ───────── */
+const OFFERS = [
+  {id:"ge-rd-meca-belfort", co:"GE Vernova", role:"Stagiaire Ingénieur·e R&D — Génie mécanique H/F", place:"Belfort (90)", km:0, zone:1, kind:"stage", start:"2027 · période PFE", posted:"page carrière", src:"GE Careers", top:true, en:true, url:"https://careers.gevernova.com/fr/stagiaire-ing%C3%A9nieur-e-r-d-g%C3%A9nie-m%C3%A9canique-h-f/job/R5035813"},
+  {id:"ge-data-belfort", co:"GE Vernova", role:"Stagiaire Ingénieur — Data Analytics & Transformation Digitale F/H", place:"Belfort (90)", km:0, zone:1, kind:"stage", start:"à confirmer", posted:"relayé", src:"Dreamwork", top:true, en:true, url:"https://www.dreamworkhq.com/job/cc439d8d-d2c2-4287-84e4-12a2c476685e"},
+  {id:"ge-ac-belfort", co:"GE Vernova", role:"Stagiaire Amélioration Continue", place:"Belfort (90)", km:0, zone:1, kind:"stage", start:"à confirmer", posted:"relayé", src:"Workopia", top:true, en:true, url:"https://workopia.io/jobs/a3e6dfbe6e6fa15d38d000cb3aeb1374"},
+  {id:"ge-qf-bourogne", co:"GE Vernova", role:"Apprenti·e Ingénieur Qualité Fournisseur H/F", place:"Bourogne (90)", km:12, zone:1, kind:"alt", start:"rentrée", posted:"21.04.2026", src:"Indeed", top:true, en:false, url:"https://to.indeed.com/aaddzk2cdlcb"},
+  {id:"cryostar-pm-hesingue", co:"Cryostar", role:"Ingénieur·e Product Management H/F — Stage", place:"Hésingue (68)", km:110, zone:1, kind:"stage", start:"à confirmer", posted:"09.04.2026", src:"Indeed", top:false, en:false, url:"https://to.indeed.com/aa7jbd8crwq7"},
+
+  {id:"danone-perf-stjust", co:"Danone", role:"STAGE — Ingénieur performance industrielle (H/F)", place:"Saint-Just-Chaleyssin (38)", km:300, zone:2, kind:"stage", start:"janvier 2027", posted:"12.08.2026", src:"Indeed", top:true, en:false, url:"https://to.indeed.com/aa76dwpb8t7n"},
+  {id:"volvo-methodes-venissieux", co:"Volvo Group", role:"Stage Ingénieur — Chargé de mission Méthodes Bac+4/5 (H/F)", place:"Vénissieux (69)", km:320, zone:2, kind:"stage", start:"à confirmer", posted:"19.08.2026", src:"Indeed", top:true, en:true, url:"https://to.indeed.com/aahtlbdmsklt"},
+  {id:"schneider-pfe-grenoble", co:"Schneider Electric", role:"Stage PFE — Ingénieur Nucléaire Amélioration Continue F/H", place:"Grenoble (38)", km:400, zone:2, kind:"stage", start:"janvier, 6 mois", posted:"page carrière", src:"WTTJ", top:true, en:true, url:"https://www.welcometothejungle.com/fr/companies/schneider-electric/jobs/stage-pfe-ingenieur-nucleaire-amelioration-continue-grenoble-f-h_grenoble"},
+  {id:"expleo-sc-grenoble", co:"Expleo", role:"Stage — Ingénieur Chef de projet Supply Chain F/H", place:"Grenoble (38)", km:400, zone:2, kind:"stage", start:"à confirmer", posted:"en ligne", src:"WTTJ", top:true, en:false, url:"https://www.welcometothejungle.com/fr/companies/expleo/jobs/stage-ingenieur-chef-de-projet-supply-chain-f-h_grenoble"},
+  {id:"eviden-pmo-grenoble", co:"Eviden (Atos)", role:"Stage PFE — PMO sur le projet SMR H/F", place:"Grenoble (38)", km:400, zone:2, kind:"stage", start:"à confirmer", posted:"en ligne", src:"WTTJ", top:true, en:false, url:"https://www.welcometothejungle.com/fr/companies/eviden/jobs/stage-pfe-pmo-sur-le-projet-smr-h-f_grenoble_EVIDE_A6GQy77"},
+  {id:"nemera-lean-lyon", co:"Nemera", role:"Stagiaire Ingénieur Global Lean Manufacturing F/H/X", place:"Lyon (69)", km:320, zone:2, kind:"stage", start:"≤ 6 mois", posted:"30.06.2026", src:"Indeed", top:false, en:true, url:"https://to.indeed.com/aawx864lbqfd"},
+  {id:"edf-projet-stvulbas", co:"EDF", role:"Stage Ingénieur·e — Appui chef de projet F/H", place:"Saint-Vulbas (01)", km:290, zone:2, kind:"stage", start:"à confirmer", posted:"15.09.2026", src:"Indeed", top:true, en:false, url:"https://to.indeed.com/aadld6wknvkf"},
+  {id:"kline-ac-stvulbas", co:"K•LINE", role:"Stage — Ingénieur Amélioration Continue H/F", place:"Saint-Vulbas (01)", km:290, zone:2, kind:"stage", start:"à confirmer", posted:"08.06.2026", src:"Indeed", top:false, en:false, url:"https://to.indeed.com/aahl622qg42p"},
+  {id:"egis-risques-lyon", co:"Egis", role:"Stage — Ingénieur maîtrise des Risques Industriels", place:"Lyon (69)", km:320, zone:2, kind:"stage", start:"à confirmer", posted:"01.09.2026", src:"Indeed", top:true, en:false, url:"https://to.indeed.com/aatt8xpvkw2l"},
+  {id:"axplora-log-chasse", co:"Axplora", role:"STAGE — Ingénieur Logistique / Génie Mécanique H/F", place:"Chasse-sur-Rhône (38)", km:330, zone:2, kind:"stage", start:"à confirmer", posted:"02.07.2026", src:"Indeed", top:false, en:false, url:"https://to.indeed.com/aamwzpvrkpml"},
+  {id:"panzani-qualite-lyon", co:"Groupe Panzani", role:"Stagiaire Ingénieur Qualité H/F", place:"Lyon 3e (69)", km:320, zone:2, kind:"stage", start:"à confirmer", posted:"31.07.2026", src:"Indeed", top:false, en:false, url:"https://to.indeed.com/aagmpqh8hvd8"},
+  {id:"valeo-ac-isledabeau", co:"Valeo", role:"Alternant·e Ingénieur·e Amélioration continue", place:"L'Isle-d'Abeau (38)", km:350, zone:2, kind:"alt", start:"rentrée", posted:"30.03.2026", src:"Indeed", top:true, en:false, url:"https://to.indeed.com/aah64pnw7m8y"},
+  {id:"eurofins-ac-marseille", co:"Eurofins", role:"Assistant·e Ingénieur·e Amélioration Continue — stage", place:"Marseille (13)", km:550, zone:2, kind:"stage", start:"à confirmer", posted:"08.06.2026", src:"Indeed", top:true, en:false, url:"https://to.indeed.com/aazccyslty7q"},
+  {id:"lir-indus-jonage", co:"L'industrie recrute", role:"Stagiaire Ingénieur Industrialisation — Production H/F", place:"Jonage (69)", km:310, zone:2, kind:"stage", start:"à confirmer", posted:"27.02.2026", src:"Indeed", top:false, en:false, url:"https://to.indeed.com/aatkqgw2hfy9"},
+
+  {id:"nespresso-ac-avenches", co:"Nespresso (Nestlé)", role:"Stage — Amélioration continue production, 6 mois", place:"Avenches / Orbe / Romont (CH)", km:130, zone:3, kind:"stage", start:"à confirmer", posted:"page carrière", src:"iAgora", top:true, en:true, url:"https://www.iagora.com/work/en/internships/engineering/switzerland"},
+  {id:"nespresso-meca-avenches", co:"Nespresso (Nestlé)", role:"Internship Mechanical Engineering — process & reliability, 6–12 mois", place:"Avenches (CH)", km:130, zone:3, kind:"stage", start:"dernière année", posted:"page carrière", src:"iAgora", top:true, en:true, url:"https://www.iagora.com/work/en/internships/engineering/switzerland"},
+  {id:"jobsch-romandie", co:"Marché suisse romand", role:"265 postes « stagiaire » — filtrer ingénierie / production", place:"Genève · Lausanne · Neuchâtel (CH)", km:150, zone:3, kind:"stage", start:"toutes dates", posted:"flux continu", src:"jobs.ch", top:false, en:true, url:"https://www.jobs.ch/en/vacancies/?region=3&term=stagiaire"}
+];
+
+const ZONES = {
+  1:{label:"Autour de Belfort", km:"0 – 130 km"},
+  2:{label:"Rhône-Alpes · Sud de la France", km:"290 – 550 km"},
+  3:{label:"Suisse romande", km:"130 – 160 km · frontalier"}
+};
+const STATUS = [["todo","Pas postulé"],["applied","Postulé"],["replied","Répondu"]];
+const byId = new Map(OFFERS.map(o => [o.id, o]));
+const band = o => o.zone===3 ? "var(--far)" : (o.km<=130 ? "var(--near)" : (o.km<=400 ? "var(--mid)" : "var(--far)"));
+const isJFM = o => /janv|février|fevrier|mars|PFE|dernière année/i.test(o.start) || /janv|février|mars/i.test(o.role);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ───────── Profil candidat : base factuelle des lettres ───────── */
+const PROFIL = `Rachad NAJIB
+6 rue de Madrid, 90000 Belfort, France
++33 6 98 37 88 03
+rachadnajib.lb@gmail.com
+linkedin.com/in/najibrachad
+
+Formation : élève ingénieur en Systèmes Industriels à l'UTBM (Belfort), 2024-2027, double cursus logistique (LOI) et industrialisation (INP). Licence en Génie Industriel et Maintenance, Université Libanaise, Faculté de Technologie, 2021-2024.
+Recherche : stage de fin d'études de six mois à partir de février 2027.
+Langues : arabe langue maternelle, français B2, anglais B2.
+
+Expérience 1 — Stagiaire Qualité et Production, ALGECO, Saint-Amour (39), 09/2025 - 02/2026, six mois.
+L'autocontrôle en production reposait sur des fiches différentes d'un poste à l'autre et sur un bâtonnage manuel des défauts : personne ne pouvait dire si la qualité progressait. Rachad a standardisé les fiches d'autocontrôle sur les postes de production, responsabilisé les opérateurs sur le contrôle qualité au poste, puis automatisé le traitement du bâtonnage avec analyses statistiques et tableaux de bord en vues hebdomadaire, mensuelle et annuelle. La difficulté n'était pas technique mais humaine : convaincre les opérateurs que la fiche était leur outil de travail et non un contrôle de plus.
+Chiffres utilisables, et aucun autre : autocontrôle standardisé sur 12 postes de production, plus de 150 points de contrôle.
+
+Expérience 2 — Stagiaire Production et Maintenance, Jubaili Bros, Saïda (Liban), 2024, quatre mois.
+Assemblage et test des composants électriques de groupes électrogènes, maintenance et dépannage en service après-vente, participation à la fabrication : pliage, découpe laser, usinage CNC.
+
+Expérience étudiante : Burger King et E.Leclerc (jobs étudiants).
+
+Méthodes maîtrisées : Lean (5S, SMED, Kaizen, JIT), résolution de problèmes (PDCA, 5 Pourquoi, Ishikawa), qualité et autocontrôle en production, ordonnancement, gestion des stocks, flux logistiques, étude de postes de travail.
+Outils : Excel avancé, VBA, Power BI, tableaux de bord, SAP, MS Project, Gantt, PERT.
+Mobilité : Belfort, Montbéliard et Mulhouse en priorité, puis Bourgogne-Franche-Comté, Alsace, région lyonnaise et sud de la France.`;
+
+const LM_MASTER = `Rachad NAJIB
+6 rue de Madrid, 90000 Belfort, France
++33 6 98 37 88 03
+rachadnajib.lb@gmail.com
+linkedin.com/in/najibrachad
+
+[ENTREPRISE]
+[Service Recrutement / nom du contact]
+[Adresse du site]
+
+Belfort, le 9 septembre 2026
+
+Objet : Candidature au stage de fin d'études « [INTITULÉ EXACT DU POSTE] » — 6 mois à partir de février 2027
+
+Madame, Monsieur,
+
+[2 phrases : ce qui, dans l'annonce ou sur le site de l'entreprise, a décidé Rachad à postuler. Du concret : le site de production, la ligne ou l'atelier concerné, le chantier d'amélioration continue mentionné dans l'offre, la technologie utilisée.] Je termine actuellement ma formation d'ingénieur en Systèmes Industriels à l'UTBM, en double cursus logistique et industrialisation, et je recherche le stage de fin d'études de six mois qui clôture ce diplôme, à partir de février 2027.
+
+Mon parcours est construit autour de deux choses que votre offre demande : l'amélioration continue au plus près des postes de travail, et la mesure. Côté méthode, j'ai été formé et j'ai pratiqué les outils du Lean — 5S, SMED, Kaizen, PDCA, 5 Pourquoi, Ishikawa — sur des sujets qualité et production. Côté mesure, je construis moi-même mes outils de suivi : VBA et Excel avancé, Power BI, tableaux de bord d'indicateurs. C'est cette combinaison qui m'intéresse : un chantier terrain ne tient dans la durée que si quelqu'un a mis en place l'indicateur qui montre qu'il tient.
+
+Chez ALGECO, à Saint-Amour, mon stage portait sur l'autocontrôle en production. Le système existait, mais chaque poste avait sa propre fiche et le suivi des défauts se faisait au bâtonnage manuel : impossible de dire, à la fin d'un mois, si la qualité progressait ou non. J'ai standardisé les fiches d'autocontrôle sur l'ensemble des postes, puis j'ai automatisé le traitement du bâtonnage pour en sortir des analyses statistiques et des tableaux de bord hebdomadaires, mensuels et annuels. La partie la plus difficile n'a pas été technique : elle a consisté à convaincre les opérateurs que ces fiches étaient leur outil de travail et non un contrôle de plus, et à les accompagner jusqu'à ce qu'ils les remplissent d'eux-mêmes. C'est ce que je retiens du stage : un indicateur qui n'est pas alimenté par ceux qui font le travail ne vaut rien.
+
+Je suis disponible pour six mois à partir de février 2027, et mobile en Bourgogne-Franche-Comté, en Alsace, dans la région lyonnaise et dans le sud de la France. Je reste à votre disposition pour un échange, en visioconférence ou sur site, afin de vous détailler ce que j'ai mis en place chez ALGECO et de comprendre ce que vous attendez de ce stage.
+
+Je vous prie d'agréer, Madame, Monsieur, l'expression de mes salutations distinguées.
+
+Rachad NAJIB`;
+
+const MOIS = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+function dateFr(){ const d=new Date(); return `Belfort, le ${d.getDate()===1?"1er":d.getDate()} ${MOIS[d.getMonth()]} ${d.getFullYear()}`; }
+function dateEn(){ const d=new Date(); return d.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"}); }
+
+function buildPrompt(o, lang){
+  const offre = `Entreprise : ${o.co}
+Intitulé exact de l'offre : ${o.role}
+Lieu du poste : ${o.place}
+Distance depuis Belfort : ${o.km===0?"sur place":"environ "+o.km+" km"}
+Date de début annoncée : ${o.start}
+Plateforme : ${o.src}
+Lien : ${o.url}`;
+
+  if(lang==="en"){
+    return `You write the cover letter of Rachad NAJIB, a French engineering student, for the internship below. Reply with ONLY the letter itself, no preamble, no commentary, no markdown.
+
+=== THE POSTING ===
+${offre}
+
+=== FACTS ABOUT THE CANDIDATE (use nothing beyond these — never invent a figure, a result or an anecdote) ===
+${PROFIL}
+
+=== THE FRENCH MASTER LETTER (translate its structure, tone and length; do not translate it word for word) ===
+${LM_MASTER}
+
+=== RULES ===
+1. Formal British-English business letter. Blocks in this order: sender block (name, address, phone, e-mail, LinkedIn), then the company block (company name, "Recruitment Department" or the department named in the posting, town), then "Belfort, ${dateEn()}", then a subject line starting with "Subject: Application for the end-of-studies internship «${o.role}» — 6 months from February 2027", then "Dear Hiring Manager,", then four paragraphs, then "Yours sincerely," and "Rachad NAJIB".
+2. Four paragraphs only. §1 why this company and this site, with two sentences that could not be written about any other employer, then the UTBM sentence. §2 what he brings, reordering the Lean tools and the Excel/VBA/Power BI measurement side to match the posting's own vocabulary. §3 the ALGECO proof, keeping its substance: heterogeneous self-inspection sheets, manual tally, standardisation across 12 workstations and over 150 control points, automated dashboards, and the human difficulty of getting operators to own the sheet. §4 availability six months from February 2027, mobility, and an offer to talk by video call or on site.
+3. Three to five sentences per paragraph, 30 words maximum per sentence. One page. No bullet points, no bold, no italics, no headings.
+4. No unsellable superlatives ("ideal candidate", "always been passionate", "dynamic and motivated").
+5. Cut test: any sentence that would still work after swapping the company name must be rewritten or removed.`;
+  }
+
+  return `Tu rédiges la lettre de motivation de Rachad NAJIB pour l'offre ci-dessous. Réponds UNIQUEMENT par la lettre elle-même, sans introduction, sans commentaire, sans markdown.
+
+=== L'OFFRE ===
+${offre}
+
+=== FAITS SUR LE CANDIDAT (n'utilise rien au-delà — n'invente jamais un chiffre, un résultat ni une anecdote) ===
+${PROFIL}
+
+=== LETTRE MAÎTRE (structure, ton, longueur à reproduire ; ne la recopie pas telle quelle) ===
+${LM_MASTER}
+
+=== RÈGLES ===
+1. Lettre formelle française. Blocs dans cet ordre : bloc expéditeur (nom, adresse, téléphone, courriel, LinkedIn), bloc destinataire (nom de l'entreprise, « À l'attention du service Recrutement » ou le service cité dans l'annonce, ville du site), « ${dateFr()} », objet commençant par « Objet : Candidature au stage de fin d'études « ${o.role} » — 6 mois à partir de février 2027 », « Madame, Monsieur, », les quatre paragraphes, « Je vous prie d'agréer, Madame, Monsieur, l'expression de mes salutations distinguées. », puis « Rachad NAJIB ».
+2. Quatre paragraphes, pas un de plus. §1 pourquoi cette entreprise et ce site : deux phrases qui ne pourraient pas être écrites pour un autre employeur, puis la phrase de formation UTBM. §2 ce qu'il apporte, en réordonnant les outils Lean et le volet mesure (Excel avancé, VBA, Power BI) selon le vocabulaire exact de l'annonce. §3 la preuve ALGECO, en gardant le fond : fiches d'autocontrôle hétérogènes, bâtonnage manuel, standardisation sur 12 postes et plus de 150 points de contrôle, automatisation et tableaux de bord, et la difficulté humaine de l'adhésion des opérateurs. §4 disponibilité six mois dès février 2027, mobilité adaptée au lieu du poste, proposition d'échange en visioconférence ou sur site.
+3. Registre soutenu, vouvoiement, phrases complètes, aucune abréviation. Trois à cinq phrases par paragraphe, 30 mots maximum par phrase. Une seule incise par paragraphe au maximum. Pas de liste à puces, pas de gras, pas d'italique, pas de titre.
+4. Aucun superlatif invendable (« candidat idéal », « passionné depuis toujours », « dynamique et motivé »). Pas d'exclamation.
+5. Test de coupe : toute phrase qui survivrait au remplacement du nom de l'entreprise est réécrite ou supprimée.
+6. Si l'offre est une alternance et non un stage, dis-le franchement en une phrase au §1 et propose les mêmes missions en stage de fin d'études de six mois.
+7. Une page. Rien après « Rachad NAJIB ».`;
+}
+
+/* ───────── État ───────── */
+let STATE = {};
+let db = null, sample = null, downloads = null;
+const writeChain = new Map();
+const LS_KEY = "radar-candidatures-v1";
+
+function loadLocal(){ try{ return JSON.parse(localStorage.getItem(LS_KEY) || "{}"); }catch(_){ return {}; } }
+function saveLocal(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(STATE)); }catch(_){} }
+
+function note(msg, kind){
+  const box = document.getElementById("sysnotes");
+  if([...box.children].some(c => c.textContent === msg)) return;
+  const el = document.createElement("div");
+  el.className = "syswarn"; el.textContent = msg;
+  box.appendChild(el);
+}
+
+async function persist(id, patch){
+  const body = Object.assign({}, STATE[id] || {}, patch);
+  STATE[id] = body; saveLocal(); paintRow(id); recount();
+  if(!db) return;
+  const prev = writeChain.get(id) || Promise.resolve();
+  const next = prev.catch(()=>{}).then(() => db.doc("candidatures/" + id).set(body))
+    .catch(e => {
+      if(e && e.code === "quota_exceeded") note("Le stockage du suivi est plein. Supprime d'anciennes candidatures pour en enregistrer de nouvelles.");
+      else if(e && e.code === "revoked") { db = null; note("L'enregistrement serveur a été interrompu. Le suivi continue dans ce navigateur seulement."); }
+      else note("Le dernier changement de statut n'a pas pu être enregistré côté serveur. Il reste dans ce navigateur.");
+    });
+  writeChain.set(id, next);
+  return next;
+}
+
+/* ───────── Construction du DOM, une seule fois ───────── */
+function buildRow(o){
+  const li = document.createElement("li");
+  li.className = "offer"; li.dataset.id = o.id;
+  li.style.setProperty("--band", band(o));
+  li.innerHTML = `
+    <div class="summary">
+      <div class="band"></div>
+      <div class="body" role="button" tabindex="0" aria-expanded="false">
+        <div class="rowtop"><span class="co">${esc(o.co)}</span><span class="role">${esc(o.role)}</span></div>
+        <div class="meta">
+          <span class="place">📍 ${esc(o.place)}</span>
+          <span class="dist">${o.km===0 ? "sur place" : "≈ " + o.km + " km"}</span>
+          <span>🗓 début : ${esc(o.start)}</span>
+          <span>publié : ${esc(o.posted)}</span>
+        </div>
+        <div class="tags">
+          ${o.top ? '<span class="tag top">Grand groupe</span>' : ""}
+          ${o.kind==="alt" ? '<span class="tag alt">Alternance, pas un stage</span>' : ""}
+          ${o.zone===3 ? '<span class="tag ch">Suisse · permis G possible</span>' : ""}
+          ${isJFM(o) ? '<span class="tag">Compatible janv–mars</span>' : ""}
+          <span class="tag stat" hidden></span>
+        </div>
+      </div>
+      <a class="go" href="${esc(o.url)}" target="_blank" rel="noopener">Ouvrir l'offre →<span class="src">${esc(o.src)}</span></a>
+    </div>
+    <div class="detail" hidden>
+      <div>
+        <div class="blockhead">Où j'en suis</div>
+        <div class="statusrow">
+          ${STATUS.map(([k,l]) => `<button class="st ${k}" data-s="${k}" aria-pressed="false">${l}</button>`).join("")}
+          <span class="when"></span>
+        </div>
+      </div>
+      <div>
+        <div class="blockhead">Lettre de motivation</div>
+        <div class="letterbar">
+          <button class="btn gen" data-lang="fr">Générer la lettre (FR)</button>
+          ${o.en ? '<button class="btn ghost gen" data-lang="en">English version</button>' : ""}
+          <button class="btn ghost copy" hidden>Copier</button>
+          <button class="btn ghost pdf" hidden>Télécharger en PDF</button>
+          <span class="lstatus"></span>
+        </div>
+        <textarea class="letter" hidden spellcheck="false" aria-label="Lettre de motivation pour ${esc(o.co)}"></textarea>
+      </div>
+      <div class="dropzone">
+        <button class="btn danger drop">Retirer cette offre</button>
+        <button class="btn ghost undrop" hidden>Remettre dans la liste</button>
+      </div>
+    </div>`;
+  return li;
+}
+
+function buildList(){
+  const res = document.getElementById("results");
+  for(const z of [1,2,3]){
+    const group = OFFERS.filter(o => o.zone===z).sort((a,b) => a.km - b.km);
+    if(!group.length) continue;
+    const sec = document.createElement("section");
+    sec.dataset.zone = z;
+    sec.innerHTML = `<h2 class="zone">${ZONES[z].label} <span class="km">${ZONES[z].km}</span></h2>`;
+    const ul = document.createElement("ul");
+    ul.className = "list";
+    group.forEach(o => ul.appendChild(buildRow(o)));
+    sec.appendChild(ul);
+    res.appendChild(sec);
+  }
+  const empty = document.createElement("div");
+  empty.className = "empty"; empty.id = "empty"; empty.hidden = true;
+  empty.textContent = "Aucune offre ne passe ces filtres. Retire un critère pour élargir.";
+  res.appendChild(empty);
+}
+
+/* ───────── Peinture d'une ligne à partir de l'état ───────── */
+function paintRow(id){
+  const li = document.querySelector(`li.offer[data-id="${CSS.escape(id)}"]`);
+  if(!li) return;
+  const st = (STATE[id] && STATE[id].status) || "todo";
+  li.querySelectorAll(".st").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.s === st)));
+
+  const chip = li.querySelector(".tag.stat");
+  if(st === "applied"){ chip.hidden = false; chip.className = "tag stat done"; chip.textContent = "Postulé"; }
+  else if(st === "replied"){ chip.hidden = false; chip.className = "tag stat wait"; chip.textContent = "Répondu"; }
+  else { chip.hidden = true; chip.className = "tag stat"; }
+
+  const when = li.querySelector(".when");
+  const at = STATE[id] && STATE[id].appliedAt;
+  when.textContent = (st !== "todo" && at) ? "depuis le " + at : "";
+
+  const ta = li.querySelector(".letter");
+  const lang = ta.dataset.lang || "fr";
+  const stored = STATE[id] && STATE[id]["letter_" + lang];
+  if(stored && document.activeElement !== ta && !ta.dataset.busy){
+    ta.value = stored; ta.hidden = false;
+    li.querySelector(".copy").hidden = false;
+    li.querySelector(".pdf").hidden = false;
+  }
+
+  const gone = !!(STATE[id] && STATE[id].hidden);
+  li.classList.toggle("gone", gone);
+  li.querySelector(".drop").hidden = gone;
+  li.querySelector(".undrop").hidden = !gone;
+}
+
+/* ───────── Filtres et comptage ───────── */
+const filterState = {zone:new Set(), start:new Set(), kind:new Set(), top:new Set(), todo:new Set(), gone:new Set()};
+function passes(o){
+  const st = (STATE[o.id] && STATE[o.id].status) || "todo";
+  const gone = !!(STATE[o.id] && STATE[o.id].hidden);
+  if(gone !== (filterState.gone.size > 0)) return false;
+  if(filterState.zone.size && !filterState.zone.has(String(o.zone))) return false;
+  if(filterState.start.size && !isJFM(o)) return false;
+  if(filterState.kind.size && o.kind !== "stage") return false;
+  if(filterState.top.size && !o.top) return false;
+  if(filterState.todo.size && st !== "todo") return false;
+  return true;
+}
+function recount(){
+  let visible = 0;
+  for(const o of OFFERS){
+    const li = document.querySelector(`li.offer[data-id="${CSS.escape(o.id)}"]`);
+    if(!li) continue;
+    const ok = passes(o);
+    li.hidden = !ok;
+    if(ok) visible++;
+  }
+  document.querySelectorAll("#results section").forEach(sec => {
+    sec.hidden = ![...sec.querySelectorAll("li.offer")].some(li => !li.hidden);
+  });
+  document.getElementById("empty").hidden = visible > 0;
+
+  const shown = OFFERS.filter(passes);
+  const stOf = o => (STATE[o.id] && STATE[o.id].status) || "todo";
+  const counts = [
+    ["Offres retenues", shown.length],
+    ["≤ 130 km de Belfort", shown.filter(o => o.zone !== 2).length],
+    ["Postulé", shown.filter(o => stOf(o) !== "todo").length],
+    ["Reste à traiter", shown.filter(o => stOf(o) === "todo").length]
+  ];
+  document.getElementById("counts").innerHTML = counts.map(([k,v]) =>
+    `<div class="count"><div class="v">${v}</div><div class="k">${k}</div></div>`).join("");
+
+  const live = OFFERS.filter(o => !(STATE[o.id] && STATE[o.id].hidden));
+  const tally = [["n-z1",o=>o.zone===1],["n-z2",o=>o.zone===2],["n-z3",o=>o.zone===3],
+                 ["n-jfm",isJFM],["n-st",o=>o.kind==="stage"],["n-top",o=>o.top],
+                 ["n-todo",o=>stOf(o)==="todo"]];
+  for(const [elId, fn] of tally) document.getElementById(elId).textContent = live.filter(fn).length;
+
+  const goneCount = OFFERS.length - live.length;
+  const goneChip = document.getElementById("showgone");
+  goneChip.hidden = goneCount === 0 && filterState.gone.size === 0;
+  document.getElementById("n-gone").textContent = goneCount;
+}
+
+/* ───────── Interactions ───────── */
+document.getElementById("filters").addEventListener("click", e => {
+  const b = e.target.closest(".chip"); if(!b) return;
+  const f = b.dataset.f, v = b.dataset.v, on = b.getAttribute("aria-pressed") === "true";
+  b.setAttribute("aria-pressed", String(!on));
+  if(on) filterState[f].delete(v); else filterState[f].add(v);
+  try{ localStorage.setItem("radar-filters", JSON.stringify(
+    Object.fromEntries(Object.entries(filterState).map(([k,s]) => [k, [...s]])))); }catch(_){}
+  recount();
+});
+
+function toggleDetail(li){
+  const d = li.querySelector(".detail"), body = li.querySelector(".body");
+  d.hidden = !d.hidden;
+  body.setAttribute("aria-expanded", String(!d.hidden));
+}
+
+document.getElementById("results").addEventListener("click", async e => {
+  const li = e.target.closest("li.offer"); if(!li) return;
+  const id = li.dataset.id, o = byId.get(id);
+
+  if(e.target.closest(".body")){ toggleDetail(li); return; }
+
+  const stBtn = e.target.closest(".st");
+  if(stBtn){
+    const s = stBtn.dataset.s;
+    const patch = {status: s};
+    if(s !== "todo" && !(STATE[id] && STATE[id].appliedAt)){
+      const d = new Date();
+      patch.appliedAt = String(d.getDate()).padStart(2,"0") + "." + String(d.getMonth()+1).padStart(2,"0") + "." + d.getFullYear();
+    }
+    if(s === "todo") patch.appliedAt = "";
+    persist(id, patch);
+    return;
+  }
+
+  const copyBtn = e.target.closest(".copy");
+  if(copyBtn){
+    const ta = li.querySelector(".letter");
+    try{
+      await navigator.clipboard.writeText(ta.value);
+      copyBtn.textContent = "Copié"; setTimeout(() => copyBtn.textContent = "Copier", 1600);
+    }catch(_){
+      ta.focus(); ta.select();
+      li.querySelector(".lstatus").textContent = "Copie automatique bloquée. Le texte est sélectionné : Ctrl+C.";
+    }
+    return;
+  }
+
+  if(e.target.closest(".drop")){ persist(id, {hidden:true}); return; }
+  if(e.target.closest(".undrop")){ persist(id, {hidden:false}); return; }
+  if(e.target.closest(".pdf")){ makePdf(li, o, e.target.closest(".pdf")); return; }
+
+  const gen = e.target.closest(".gen");
+  if(gen) generate(li, o, gen);
+});
+
+document.getElementById("results").addEventListener("keydown", e => {
+  if((e.key === "Enter" || e.key === " ") && e.target.classList.contains("body")){
+    e.preventDefault(); toggleDetail(e.target.closest("li.offer"));
+  }
+});
+
+document.getElementById("results").addEventListener("blur", e => {
+  const ta = e.target.closest && e.target.closest(".letter");
+  if(!ta) return;
+  const li = ta.closest("li.offer"), id = li.dataset.id, lang = ta.dataset.lang || "fr";
+  const stored = (STATE[id] && STATE[id]["letter_" + lang]) || "";
+  if(ta.value && ta.value !== stored) persist(id, {["letter_" + lang]: ta.value});
+}, true);
+
+/* ───────── Génération de la lettre ───────── */
+const running = new Map();
+const lastGen = new Map();
+const COOLDOWN_MS = 3000;
+async function generate(li, o, btn){
+  const id = o.id, lang = btn.dataset.lang;
+  const ta = li.querySelector(".letter"), status = li.querySelector(".lstatus");
+  const copyBtn = li.querySelector(".copy");
+
+  if(running.has(id)){ running.get(id).abort(); running.delete(id); return; }
+
+  const now = Date.now();
+  const lastTime = lastGen.get(id);
+  if(lastTime && now - lastTime < COOLDOWN_MS){
+    const wait = Math.ceil((COOLDOWN_MS - (now - lastTime)) / 1000);
+    status.textContent = `Attends ${wait}s avant de regénérer (protège contre les appels trop rapides).`;
+    return;
+  }
+
+  const cached = STATE[id] && STATE[id]["letter_" + lang];
+  const regen = ta.dataset.lang === lang && ta.value.trim();
+
+  ta.dataset.lang = lang;
+  if(cached && !regen){
+    ta.value = cached; ta.hidden = false; copyBtn.hidden = false;
+    li.querySelector(".pdf").hidden = false;
+    status.textContent = "Lettre déjà enregistrée. Clique à nouveau pour en écrire une autre.";
+    return;
+  }
+
+  if(!sample){ status.textContent = "Génération indisponible dans cette vue."; return; }
+
+  lastGen.set(id, now);
+  const ctl = new AbortController();
+  running.set(id, ctl);
+  const label = btn.textContent;
+  btn.textContent = "Arrêter";
+  li.querySelectorAll(".gen").forEach(b => { if(b !== btn) b.disabled = true; });
+  status.textContent = "Rédaction en cours… (30 à 60 s)";
+  ta.hidden = false; ta.dataset.busy = "1"; ta.value = "";
+
+  try{
+    const {text, truncated} = await sample(buildPrompt(o, lang), {
+      signal: ctl.signal,
+      modelTier: "default",
+      cache: false,
+      onText: ({text}) => { ta.value = text; status.textContent = "Rédaction…"; }
+    });
+    ta.value = text;
+    copyBtn.hidden = false;
+    li.querySelector(".pdf").hidden = false;
+    status.textContent = truncated ? "Lettre coupée par la limite de longueur. Regénère pour une version complète."
+                                   : "Lettre enregistrée. Tu peux la modifier ici, c'est sauvegardé.";
+    persist(id, {["letter_" + lang]: text});
+  }catch(err){
+    const code = err && err.code;
+    if(code === "cancelled"){
+      status.textContent = "Arrêté.";
+      if(err.text) ta.value = err.text;
+    } else if(code === "not_granted" || code === "sampling_disabled" || code === "not_declared"){
+      status.textContent = "Tu as refusé l'accès à Claude pour cette page. Recharge-la pour réessayer.";
+      li.querySelectorAll(".gen").forEach(b => b.hidden = true);
+    } else if(code === "rate_limited"){
+      status.textContent = "Trop de demandes d'affilée. Attends une minute et réessaie.";
+    } else if(code === "refused"){
+      ta.value = ""; status.textContent = "Claude a refusé cette demande. Dis-le-moi en chat et je reprends la lettre.";
+    } else {
+      if(err && err.text) ta.value = err.text;
+      status.textContent = "Interrompu. Réessaie dans un instant.";
+    }
+  }finally{
+    delete ta.dataset.busy;
+    running.delete(id);
+    btn.textContent = label;
+    li.querySelectorAll(".gen").forEach(b => b.disabled = false);
+  }
+}
+
+/* ───────── Export PDF : lettre formelle sur une page ───────── */
+function slug(s){
+  return s.normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^A-Za-z0-9]+/g,"_").replace(/^_+|_+$/g,"").slice(0,40);
+}
+
+function renderLetter(doc, text, size){
+  const M = 22;                       // marge 22 mm sur les quatre côtés
+  const W = 210 - M * 2;              // largeur utile A4
+  const BOTTOM = 297 - M;
+  doc.setFont("helvetica","normal");
+  doc.setFontSize(size);
+  doc.setLineHeightFactor(1.18);
+  const lh = size * 0.3528 * 1.18;    // points → mm
+
+  const blocks = text.replace(/\r/g,"").split(/\n\s*\n/).map(b => b.trim()).filter(Boolean);
+  let y = M + lh, seenDate = false, seenSubject = false;
+
+  for(let i = 0; i < blocks.length; i++){
+    const b = blocks[i];
+    const lines = b.split("\n").map(l => l.trim());
+    const isDate = /^(Belfort\s*,)/i.test(b);
+    const isSubject = /^(Objet|Subject)\s*:/i.test(b);
+    const isGreeting = /^(Madame|Monsieur|Dear)\b/i.test(b) && b.length < 90;
+    const isSign = /^Rachad\s+NAJIB$/i.test(b);
+    const isSender = i === 0;
+    const isRecipient = !seenDate && !isSender && !isDate && lines.length <= 4 && lines.every(l => l.length < 70);
+
+    if(isDate) seenDate = true;
+    if(isSubject) seenSubject = true;
+
+    if(isSender || isRecipient || isDate || isSign){
+      const align = (isSender) ? "left" : "right";
+      const x = align === "left" ? M : M + W;
+      for(const l of lines){
+        if(isSender && l === lines[0]) doc.setFont("helvetica","bold"); else doc.setFont("helvetica","normal");
+        doc.text(l, x, y, {align});
+        y += lh;
+      }
+      y += lh * 0.6;
+      doc.setFont("helvetica","normal");
+      continue;
+    }
+
+    if(isSubject){
+      doc.setFont("helvetica","bold");
+      const wrapped = doc.splitTextToSize(b, W);
+      doc.text(wrapped, M, y);
+      y += wrapped.length * lh + lh * 0.7;
+      doc.setFont("helvetica","normal");
+      continue;
+    }
+
+    if(isGreeting){
+      doc.text(b, M, y);
+      y += lh * 1.7;
+      continue;
+    }
+
+    const wrapped = doc.splitTextToSize(b, W);
+    doc.text(b, M, y, {align:"justify", maxWidth:W});
+    y += wrapped.length * lh + lh * 0.75;
+  }
+  return y <= BOTTOM;
+}
+
+async function makePdf(li, o, btn){
+  const ta = li.querySelector(".letter"), status = li.querySelector(".lstatus");
+  const text = ta.value.trim();
+  if(!text){ status.textContent = "Génère d'abord la lettre."; return; }
+  if(!window.jspdf || !window.jspdf.jsPDF){ status.textContent = "Le moteur PDF n'a pas pu se charger. Recharge la page."; return; }
+  if(!downloads){ status.textContent = "Le téléchargement n'est pas disponible dans cette vue. Copie le texte à la place."; return; }
+
+  const label = btn.textContent;
+  btn.disabled = true; btn.textContent = "Préparation…";
+  try{
+    const {jsPDF} = window.jspdf;
+    let doc, fitted = false;
+    for(const size of [11, 10.5, 10]){
+      doc = new jsPDF({unit:"mm", format:"a4"});
+      fitted = renderLetter(doc, text, size);
+      if(fitted) break;
+    }
+    const lang = ta.dataset.lang === "en" ? "EN" : "FR";
+    const filename = `LM_Rachad_Najib_${slug(o.co)}_${slug(o.role.split(/[—–(]/)[0])}_${lang}.pdf`;
+    await downloads.save({filename, data: doc.output("blob")});
+    status.textContent = fitted ? "PDF enregistré." : "PDF enregistré, mais la lettre déborde sur une seconde page : raccourcis un paragraphe.";
+  }catch(err){
+    const code = err && err.code;
+    if(code === "declined") status.textContent = "Téléchargement annulé.";
+    else if(code === "rate_limited") status.textContent = "Une autre demande est en cours. Réessaie dans un instant.";
+    else if(code === "unavailable" || code === "not_granted") status.textContent = "Le téléchargement n'est pas disponible ici. Copie le texte à la place.";
+    else status.textContent = "Le PDF n'a pas pu être créé. Copie le texte à la place.";
+  }finally{
+    btn.disabled = false; btn.textContent = label;
+  }
+}
+
+/* ───────── Démarrage ───────── */
+buildList();
+STATE = loadLocal();
+try{
+  const saved = JSON.parse(localStorage.getItem("radar-filters") || "{}");
+  for(const [k, arr] of Object.entries(saved)) if(filterState[k]) arr.forEach(v => filterState[k].add(v));
+  document.querySelectorAll(".chip").forEach(c => {
+    if(filterState[c.dataset.f] && filterState[c.dataset.f].has(c.dataset.v)) c.setAttribute("aria-pressed","true");
+  });
+}catch(_){}
+OFFERS.forEach(o => paintRow(o.id));
+recount();
+
+const useCap = n => (window.claude && window.claude.use) ? window.claude.use(n).catch(() => null) : Promise.resolve(null);
+
+(async () => {
+  db = await useCap("db");
+  if(!db){
+    note("Le suivi n'est enregistré que dans ce navigateur pour cette visite : il ne suivra pas sur un autre appareil.");
+  } else {
+    db.collection("candidatures").onSnapshot(snap => {
+      let touched = false;
+      for(const d of snap.docs){
+        if(!byId.has(d.id)) continue;
+        const body = d.data(); if(!body) continue;
+        STATE[d.id] = body; paintRow(d.id); touched = true;
+      }
+      if(touched){ saveLocal(); recount(); }
+    }, err => {
+      if(err && err.code === "revoked") note("L'enregistrement serveur a été interrompu. Le suivi continue dans ce navigateur seulement.");
+      else note("La synchronisation du suivi est interrompue. Recharge la page pour la relancer.");
+    });
+  }
+})();
+
+(async () => {
+  sample = await useCap("sample");
+  if(!sample) document.querySelectorAll(".gen").forEach(b => { b.disabled = true; b.title = "Génération indisponible dans cette vue"; });
+})();
+
+(async () => {
+  downloads = await useCap("downloads");
+  if(!downloads) document.querySelectorAll(".pdf").forEach(b => { b.disabled = true; b.title = "Téléchargement indisponible dans cette vue"; });
+})();
+</script>
