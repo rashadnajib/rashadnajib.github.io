@@ -1,126 +1,253 @@
 <title>Radar Stage PFE 90</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
   :root{
-    --ground:#F2F3F5; --panel:#FFFFFF; --panel-2:#E9EBEF;
-    --ink:#161A20; --ink-2:#4E5663; --ink-3:#7B8492;
-    --rule:#D3D8DF; --signal:#1F4FD8; --signal-soft:#E3E9FC;
-    --near:#0E7C5A; --mid:#B06B00; --far:#6B4EA8; --ch:#B3261E;
-    --ok:#0E7C5A; --ok-soft:#DCF0E8; --warn:#B06B00; --warn-soft:#FBEEDA;
-    --focus:#1F4FD8;
+    --paper:#FBFAF6; --panel:#FFFFFF; --head:#EFECE3; --sunk:#F4F2EB;
+    --ink:#1B1A16; --ink-2:#55524A; --ink-3:#857F72;
+    --rule:#DAD5C9; --edge:#1B1A16; --line:#A9B9C9;
+    --signal:#0B6B87; --signal-soft:#DEEEF3;
+    --near:#0E6B4E; --near-soft:#DEEFE7;
+    --mid:#9A5D00; --mid-soft:#F8EEDA;
+    --far:#5A4B9E; --far-soft:#E6E3F5;
+    --ch:#A63F18;
+    --ok:#0E6B4E; --ok-soft:#DEEFE7; --warn:#9A5D00; --warn-soft:#F8EEDA;
   }
-  @media (prefers-color-scheme: dark){
+  @media (prefers-color-scheme:dark){
     :root:not([data-theme="light"]){
-      --ground:#0F1216; --panel:#171B21; --panel-2:#1F242C;
-      --ink:#E8EBEF; --ink-2:#A6AEBB; --ink-3:#767F8C;
-      --rule:#2A313A; --signal:#7FA0FF; --signal-soft:#1B2440;
-      --near:#4FCB9B; --mid:#E0A64A; --far:#B29AE8; --ch:#F08079;
-      --ok:#4FCB9B; --ok-soft:#143026; --warn:#E0A64A; --warn-soft:#2E2413;
-      --focus:#7FA0FF;
+      --paper:#14161A; --panel:#191C21; --head:#20242B; --sunk:#1C2026;
+      --ink:#E9E6DD; --ink-2:#A8A296; --ink-3:#7C776C;
+      --rule:#2D3239; --edge:#5C6572; --line:#3E5266;
+      --signal:#5FC2DE; --signal-soft:#122A33;
+      --near:#4FCB9B; --near-soft:#0F2A21;
+      --mid:#DFA84E; --mid-soft:#2B2213;
+      --far:#AF9BE8; --far-soft:#201C33;
+      --ch:#E89070;
+      --ok:#4FCB9B; --ok-soft:#0F2A21; --warn:#DFA84E; --warn-soft:#2B2213;
     }
   }
   :root[data-theme="dark"]{
-    --ground:#0F1216; --panel:#171B21; --panel-2:#1F242C;
-    --ink:#E8EBEF; --ink-2:#A6AEBB; --ink-3:#767F8C;
-    --rule:#2A313A; --signal:#7FA0FF; --signal-soft:#1B2440;
-    --near:#4FCB9B; --mid:#E0A64A; --far:#B29AE8; --ch:#F08079;
-    --ok:#4FCB9B; --ok-soft:#143026; --warn:#E0A64A; --warn-soft:#2E2413;
-    --focus:#7FA0FF;
+    --paper:#14161A; --panel:#191C21; --head:#20242B; --sunk:#1C2026;
+    --ink:#E9E6DD; --ink-2:#A8A296; --ink-3:#7C776C;
+    --rule:#2D3239; --edge:#5C6572; --line:#3E5266;
+    --signal:#5FC2DE; --signal-soft:#122A33;
+    --near:#4FCB9B; --near-soft:#0F2A21;
+    --mid:#DFA84E; --mid-soft:#2B2213;
+    --far:#AF9BE8; --far-soft:#201C33;
+    --ch:#E89070;
+    --ok:#4FCB9B; --ok-soft:#0F2A21; --warn:#DFA84E; --warn-soft:#2B2213;
   }
 
-  body{background:var(--ground);color:var(--ink);font-family:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;font-size:15px;line-height:1.5;}
-  .wrap{max-width:1080px;margin:0 auto;padding-inline:20px;padding-block:0 56px;}
-  button{font-family:inherit;}
-  :focus-visible{outline:2px solid var(--focus);outline-offset:2px;}
+  body{background:var(--paper);color:var(--ink);
+    font-family:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;font-size:15px;line-height:1.5;}
+  .wrap{max-width:1120px;margin:0 auto;padding-inline:20px;padding-block:0 60px;}
+  button{font-family:inherit;color:inherit;}
+  :focus-visible{outline:2px solid var(--signal);outline-offset:2px;}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
 
-  header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--ground);border-bottom:1px solid var(--rule);padding-block:14px 12px;margin-inline:-20px;padding-inline:20px;}
-  .brand{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 14px;}
-  h1{font-family:Archivo,"IBM Plex Sans",sans-serif;font-weight:700;font-size:clamp(20px,4.4vw,27px);letter-spacing:-.02em;margin:0;text-wrap:balance;}
-  .stamp{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;color:var(--ink-3);letter-spacing:.02em;}
-  .stamp b{color:var(--ink-2);font-weight:500;}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums;}
 
-  .filters{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;}
-  .chip{font:500 12px/1 "IBM Plex Sans",sans-serif;border:1px solid var(--rule);background:var(--panel);color:var(--ink-2);border-radius:999px;padding:7px 12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
+  /* ───── Cartouche ───── */
+  .cartouche{border:1px solid var(--edge);border-top-width:3px;background:var(--head);
+    margin-top:18px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px 24px;padding:15px 18px 14px;}
+  h1{font-family:Oswald,"IBM Plex Sans",sans-serif;font-weight:600;
+    font-size:clamp(20px,4.4vw,29px);letter-spacing:.03em;text-transform:uppercase;margin:0;text-wrap:balance;}
+  .cart-sub{margin:5px 0 0;color:var(--ink-2);font-size:13px;max-width:52ch;}
+  .cart-rev{margin:0;display:grid;gap:5px 16px;grid-template-columns:auto auto;align-content:start;}
+  .cart-rev>div{display:contents;}
+  .cart-rev dt{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.11em;
+    text-transform:uppercase;color:var(--ink-3);align-self:baseline;}
+  .cart-rev dd{margin:0;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-2);
+    font-variant-numeric:tabular-nums;text-align:right;}
+  @media (max-width:760px){
+    .cartouche{grid-template-columns:1fr;}
+    .cart-rev{grid-template-columns:auto 1fr;}
+  }
+
+  /* ───── Barre de contrôle ───── */
+  .control{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--paper);
+    border-bottom:1px solid var(--edge);margin-inline:-20px;padding:11px 20px 10px;}
+  .views{display:inline-flex;border:1px solid var(--rule);background:var(--panel);}
+  .vtab{font-family:Oswald,sans-serif;font-weight:500;font-size:12px;letter-spacing:.11em;
+    text-transform:uppercase;border:0;background:none;padding:9px 17px;cursor:pointer;color:var(--ink-3);}
+  .vtab+.vtab{border-left:1px solid var(--rule);}
+  .vtab:hover{color:var(--ink);}
+  .vtab[aria-selected="true"]{background:var(--ink);color:var(--paper);}
+  .ctrl-row{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;}
+  .filters{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px;}
+  .chip{font:500 11.5px/1 "IBM Plex Sans",sans-serif;border:1px solid var(--rule);background:var(--panel);
+    color:var(--ink-2);padding:7px 10px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
   .chip:hover{border-color:var(--ink-3);color:var(--ink);}
   .chip[aria-pressed="true"]{background:var(--signal-soft);border-color:var(--signal);color:var(--signal);}
-  .chip .n{font-family:"IBM Plex Mono",monospace;font-size:11px;opacity:.75;}
-  .sep{width:1px;background:var(--rule);margin:2px 5px;align-self:stretch;}
+  .chip .n{font-family:"IBM Plex Mono",monospace;font-size:10.5px;opacity:.7;}
+  .sep{width:1px;background:var(--rule);align-self:stretch;margin:1px 4px;}
+  .reset{font:500 11.5px/1 "IBM Plex Sans",sans-serif;border:0;background:none;color:var(--ink-3);
+    text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:7px 4px;}
+  .reset:hover{color:var(--ch);}
 
-  .counts{display:flex;flex-wrap:wrap;gap:0;margin-block:22px 8px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);}
-  .count{flex:1 1 130px;padding:12px 4px 13px;}
-  .count + .count{border-left:1px solid var(--rule);padding-left:14px;}
-  .count .v{font-family:"IBM Plex Mono",monospace;font-size:24px;font-variant-numeric:tabular-nums;line-height:1;}
-  .count .k{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);margin-top:6px;}
+  /* ───── Bandeau chiffres ───── */
+  .counts{display:flex;flex-wrap:wrap;margin-block:20px 0;
+    border-top:1px solid var(--edge);border-bottom:1px solid var(--edge);}
+  .count{flex:1 1 140px;padding:11px 4px 12px;}
+  .count+.count{border-left:1px solid var(--rule);padding-left:15px;}
+  .count .v{font-family:"IBM Plex Mono",monospace;font-size:23px;font-variant-numeric:tabular-nums;line-height:1;}
+  .count .k{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-top:6px;}
 
-  h2.zone{font-family:Archivo,sans-serif;font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin:30px 0 10px;display:flex;align-items:center;gap:10px;}
-  h2.zone::after{content:"";flex:1;height:1px;background:var(--rule);}
-  h2.zone .km{font-family:"IBM Plex Mono",monospace;letter-spacing:0;text-transform:none;font-size:11.5px;}
+  .syswarn{margin-block:12px 0;border-left:3px solid var(--warn);background:var(--warn-soft);
+    color:var(--ink-2);padding:9px 12px;font-size:12.5px;}
 
-  ul.list{list-style:none;margin:0;padding:0;display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:4px;overflow:hidden;}
-  li.offer{background:var(--panel);}
-  .summary{display:grid;grid-template-columns:5px 1fr auto;align-items:stretch;}
-  .band{background:var(--band,var(--ink-3));}
-  .body{padding:13px 16px;min-width:0;cursor:pointer;}
-  .rowtop{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 9px;}
-  .co{font-family:Archivo,sans-serif;font-weight:600;font-size:14.5px;letter-spacing:-.01em;}
-  .role{font-size:14px;color:var(--ink-2);min-width:0;overflow-wrap:anywhere;}
-  .meta{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:7px;font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-3);}
-  .meta span{white-space:nowrap;}
-  .meta .place{color:var(--ink-2);}
-  .dist{color:var(--band,var(--ink-3));font-weight:500;}
-  .tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px;align-items:center;}
-  .tag{font:500 10.5px/1 "IBM Plex Sans",sans-serif;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--rule);border-radius:3px;padding:4px 6px;color:var(--ink-3);}
+  /* ───── En-tête de colonnes (vue relevé, large) ───── */
+  .thead{display:none;}
+  .thead .h{font:500 9.5px/1.3 "IBM Plex Mono",monospace;letter-spacing:.11em;text-transform:uppercase;
+    color:var(--ink-3);padding:11px 11px 9px;text-align:left;background:none;border:0;white-space:nowrap;}
+  .thead button.h{cursor:pointer;}
+  .thead button.h:hover{color:var(--signal);}
+  .thead .h[aria-sort]{color:var(--signal);}
+  .thead .h .ar{opacity:.35;}
+  .thead .h[aria-sort] .ar{opacity:1;}
+  .thead .h.r{text-align:right;}
+
+  /* ───── Liste ───── */
+  .board{margin-top:0;}
+  ul.list{list-style:none;margin:0;padding:0;}
+  li.offer{background:var(--panel);border:1px solid var(--rule);border-top:0;}
+  li.offer:first-child{border-top:1px solid var(--rule);}
+  li.offer.gone .summary{opacity:.52;}
+
+  .summary{display:grid;grid-template-columns:4px minmax(0,1fr);}
+  .band{background:var(--band,var(--ink-3));grid-row:1/-1;}
+  .sbody{padding:12px 14px;min-width:0;cursor:pointer;
+    display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;}
+  .cell{min-width:0;}
+  .cell.main{flex:1 0 100%;}
+  .place,.start{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);}
+  .cell.flags{flex:1 0 100%;}
+  .summary .go{flex:1 0 100%;}
+  .idx{display:none;}
+  .co{font-family:Oswald,sans-serif;font-weight:600;font-size:14.5px;letter-spacing:.02em;
+    display:block;overflow-wrap:anywhere;}
+  .role{font-size:13px;color:var(--ink-2);display:block;margin-top:2px;overflow-wrap:anywhere;}
+  .kmv{font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:500;
+    font-variant-numeric:tabular-nums;color:var(--band,var(--ink-3));white-space:nowrap;}
+  .kmbar{display:none;height:3px;background:var(--rule);margin-top:7px;width:100%;}
+  .kmbar i{display:block;height:100%;background:var(--line);min-width:2px;}
+  .flags{display:flex;flex-wrap:wrap;gap:4px;align-items:center;}
+  .tag{font:500 9.5px/1 "IBM Plex Sans",sans-serif;letter-spacing:.07em;text-transform:uppercase;
+    border:1px solid var(--rule);padding:4px 5px;color:var(--ink-3);white-space:nowrap;}
   .tag.top{border-color:var(--signal);color:var(--signal);background:var(--signal-soft);}
+  .tag.new{border-color:var(--near);color:var(--near);background:var(--near-soft);}
   .tag.alt{border-color:var(--ch);color:var(--ch);}
-  .tag.ch{border-color:var(--far);color:var(--far);}
+  .tag.ch{border-color:var(--far);color:var(--far);background:var(--far-soft);}
+  .tag.jfm{border-color:var(--mid);color:var(--mid);background:var(--mid-soft);}
   .tag.done{border-color:var(--ok);color:var(--ok);background:var(--ok-soft);}
   .tag.wait{border-color:var(--warn);color:var(--warn);background:var(--warn-soft);}
-  .go{display:flex;align-items:center;padding:0 16px;border-left:1px solid var(--rule);color:var(--signal);text-decoration:none;font:500 12px/1 "IBM Plex Sans",sans-serif;white-space:nowrap;}
-  .go:hover{background:var(--signal-soft);}
-  .go .src{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--ink-3);margin-left:8px;}
+  .go{display:inline-flex;align-items:center;gap:7px;color:var(--signal);text-decoration:none;
+    font:500 11.5px/1 "IBM Plex Sans",sans-serif;padding:8px 0 2px;}
+  .go:hover{text-decoration:underline;text-underline-offset:3px;}
+  .go .src{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--ink-3);}
+  .go .short{display:none;}
 
-  .detail{border-top:1px solid var(--rule);background:var(--panel-2);padding:14px 16px 16px;display:flex;flex-direction:column;gap:12px;}
-  .blockhead{font:600 10.5px/1 "IBM Plex Sans",sans-serif;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);}
+  /* ───── Vue relevé, écran large : la grille tabulaire ───── */
+  @media (min-width:901px){
+    .view-releve .thead{display:grid;grid-template-columns:var(--cols);
+      border-bottom:1px solid var(--edge);background:var(--sunk);margin-top:22px;}
+    .view-releve .summary{grid-template-columns:var(--cols);align-items:start;}
+    .view-releve .sbody{display:contents;}
+    .view-releve .cell{padding:10px 11px;align-self:start;}
+    .view-releve .idx{display:block;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+      color:var(--ink-3);padding-top:12px;}
+    .view-releve .co{font-size:13.5px;}
+    .view-releve .role{font-size:12px;}
+    .view-releve .place{font-size:12px;color:var(--ink-2);}
+    .view-releve .dist{text-align:right;}
+    .view-releve .kmbar{display:block;}
+    .view-releve .start{font-size:12px;color:var(--ink-2);}
+    .view-releve .flags{gap:3px;}
+    .view-releve .go{padding:10px 11px;}
+    .view-releve .go .full{display:none;}
+    .view-releve .go .short{display:inline;}
+    .view-releve .go .src{display:none;}
+    .view-releve li.offer{border-left:0;border-right:0;}
+    .view-releve li.offer:hover .summary{background:var(--sunk);}
+  }
+
+  /* ───── Vue pipeline ───── */
+  .cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;
+    align-items:start;margin-top:22px;}
+  @media (max-width:820px){.cols{grid-template-columns:1fr;}}
+  .col{min-width:0;}
+  .colhead{display:flex;align-items:center;gap:9px;padding:0 0 8px;
+    border-bottom:2px solid var(--cc,var(--ink-3));}
+  .colhead .t{font-family:Oswald,sans-serif;font-weight:600;font-size:11.5px;letter-spacing:.11em;
+    text-transform:uppercase;color:var(--cc,var(--ink-2));}
+  .colhead .n{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--cc,var(--ink-3));
+    margin-left:auto;font-variant-numeric:tabular-nums;}
+  .col ul.list{display:grid;gap:9px;margin-top:9px;}
+  .view-pipeline li.offer{border:1px solid var(--rule);}
+  .colempty{border:1px dashed var(--rule);padding:18px;text-align:center;
+    color:var(--ink-3);font-size:12px;margin-top:9px;}
+
+  /* ───── Panneau de détail (identique aux deux vues) ───── */
+  .detail{border-top:1px solid var(--rule);background:var(--sunk);padding:14px 15px 15px;
+    display:flex;flex-direction:column;gap:13px;}
+  .blockhead{font:500 9.5px/1 "IBM Plex Mono",monospace;letter-spacing:.11em;
+    text-transform:uppercase;color:var(--ink-3);margin-bottom:8px;}
   .statusrow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
-  .st{font:500 12px/1 "IBM Plex Sans",sans-serif;border:1px solid var(--rule);background:var(--panel);color:var(--ink-2);border-radius:4px;padding:8px 12px;cursor:pointer;}
+  .st{font:500 12px/1 "IBM Plex Sans",sans-serif;border:1px solid var(--rule);background:var(--panel);
+    color:var(--ink-2);padding:8px 12px;cursor:pointer;}
   .st:hover{border-color:var(--ink-3);color:var(--ink);}
-  .st[aria-pressed="true"]{background:var(--ink);color:var(--ground);border-color:var(--ink);}
+  .st[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink);}
   .st.applied[aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:#fff;}
   .st.replied[aria-pressed="true"]{background:var(--signal);border-color:var(--signal);color:#fff;}
   .when{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);}
 
   .letterbar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
-  .btn{font:500 12px/1 "IBM Plex Sans",sans-serif;border:1px solid var(--signal);background:var(--signal-soft);color:var(--signal);border-radius:4px;padding:8px 12px;cursor:pointer;}
-  .btn:hover{background:var(--signal);color:#fff;}
+  .btn{font:500 12px/1 "IBM Plex Sans",sans-serif;border:1px solid var(--signal);
+    background:var(--signal-soft);color:var(--signal);padding:8px 12px;cursor:pointer;}
+  .btn:hover{background:var(--signal);color:var(--paper);}
   .btn.ghost{border-color:var(--rule);background:var(--panel);color:var(--ink-2);}
   .btn.ghost:hover{background:var(--panel);border-color:var(--ink-3);color:var(--ink);}
   .btn.danger{border-color:var(--rule);background:var(--panel);color:var(--ink-3);}
   .btn.danger:hover{border-color:var(--ch);color:var(--ch);background:var(--panel);}
   .btn:disabled{opacity:.45;cursor:default;}
-  .dropzone{display:flex;justify-content:flex-end;border-top:1px dashed var(--rule);padding-top:11px;}
-  li.offer.gone .body{opacity:.5;}
   .lstatus{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);}
-  textarea.letter{width:100%;box-sizing:border-box;min-height:340px;resize:vertical;background:var(--panel);color:var(--ink);border:1px solid var(--rule);border-radius:4px;padding:14px 15px;font-family:"IBM Plex Sans",sans-serif;font-size:13.5px;line-height:1.62;}
+  textarea.letter{width:100%;box-sizing:border-box;min-height:340px;resize:vertical;margin-top:9px;
+    background:var(--panel);color:var(--ink);border:1px solid var(--rule);padding:14px 15px;
+    font-family:"IBM Plex Sans",sans-serif;font-size:13.5px;line-height:1.62;}
+  .dropzone{display:flex;justify-content:flex-end;border-top:1px dashed var(--rule);padding-top:11px;}
 
-  .empty{background:var(--panel);border:1px dashed var(--rule);border-radius:4px;padding:26px;text-align:center;color:var(--ink-3);font-size:13.5px;}
-  .syswarn{margin-block:10px 0;border-left:3px solid var(--warn);background:var(--warn-soft);color:var(--ink-2);padding:9px 12px;font-size:12.5px;border-radius:0 4px 4px 0;}
+  .empty{border:1px dashed var(--rule);padding:28px;text-align:center;
+    color:var(--ink-3);font-size:13.5px;margin-top:22px;}
 
-  footer{margin-top:40px;border-top:1px solid var(--rule);padding-top:16px;color:var(--ink-3);font-size:12.5px;}
-  footer p{margin:0 0 8px;max-width:64ch;}
+  footer{margin-top:44px;border-top:1px solid var(--edge);padding-top:16px;
+    color:var(--ink-3);font-size:12.5px;}
+  footer p{margin:0 0 9px;max-width:66ch;}
+  footer b{color:var(--ink-2);}
   footer code{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-2);}
-
-  @media (max-width:620px){
-    .summary{grid-template-columns:5px 1fr;}
-    .go{grid-column:2;border-left:0;border-top:1px solid var(--rule);padding:10px 16px;}
-  }
-  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
 </style>
 
 <div class="wrap">
-  <header class="top">
-    <div class="brand">
+  <div class="cartouche">
+    <div>
       <h1>Radar Stage PFE 90</h1>
-      <div class="stamp">Rachad · UTBM Systèmes Industriels · scan <b id="stamp">16.09.2026 · 17h40</b> · 2×/jour <b>10h00 &amp; 16h00</b></div>
+      <p class="cart-sub">Relevé d'offres — stage de fin d'études de six mois, à partir de février 2027.
+        Supply chain, production, méthodes, qualité, amélioration continue.</p>
+    </div>
+    <dl class="cart-rev">
+      <div><dt>Candidat</dt><dd>R. NAJIB · UTBM Syst. Industriels</dd></div>
+      <div><dt>Dernier scan</dt><dd id="stamp">19.09.2026 · 10h00</dd></div>
+      <div><dt>Cadence</dt><dd>2×/jour — 10h00 &amp; 16h00</dd></div>
+      <div><dt>Au relevé</dt><dd id="cart-total">—</dd></div>
+      <div><dt>Échelle</dt><dd>0 – 800 km depuis Belfort</dd></div>
+    </dl>
+  </div>
+
+  <div class="control">
+    <div class="ctrl-row">
+      <div class="views" role="tablist" aria-label="Vue">
+        <button class="vtab" data-view="releve" role="tab" aria-selected="true">Relevé</button>
+        <button class="vtab" data-view="pipeline" role="tab" aria-selected="false">Pipeline</button>
+      </div>
+      <button class="reset" id="reset" hidden>Tout afficher</button>
     </div>
     <div class="filters" id="filters">
       <button class="chip" data-f="zone" data-v="1" aria-pressed="false">Autour de Belfort <span class="n" id="n-z1"></span></button>
@@ -130,22 +257,38 @@
       <button class="chip" data-f="start" data-v="jfm" aria-pressed="false">Début janv–mars <span class="n" id="n-jfm"></span></button>
       <button class="chip" data-f="kind" data-v="stage" aria-pressed="false">Stage uniquement <span class="n" id="n-st"></span></button>
       <button class="chip" data-f="top" data-v="1" aria-pressed="false">Grands groupes <span class="n" id="n-top"></span></button>
+      <button class="chip" data-f="new" data-v="1" aria-pressed="false" hidden id="chip-new">Nouveau <span class="n" id="n-new"></span></button>
       <div class="sep"></div>
       <button class="chip" data-f="todo" data-v="1" aria-pressed="false">Pas encore postulé <span class="n" id="n-todo"></span></button>
       <button class="chip" id="showgone" data-f="gone" data-v="1" aria-pressed="false" hidden>Offres retirées <span class="n" id="n-gone"></span></button>
     </div>
-  </header>
+  </div>
 
   <div id="sysnotes"></div>
   <div class="counts" id="counts"></div>
-  <div id="results"></div>
+
+  <div class="board view-releve" id="board" style="--cols:4px 34px minmax(0,1fr) 150px 96px 134px 120px 56px">
+    <div class="thead" id="thead">
+      <span class="h"></span>
+      <span class="h">Rep.</span>
+      <button class="h" data-sort="co" type="button">Entreprise · Intitulé <span class="ar">▲</span></button>
+      <span class="h">Site</span>
+      <button class="h r" data-sort="km" type="button" aria-sort="ascending">Dist. <span class="ar">▲</span></button>
+      <button class="h" data-sort="start" type="button">Début <span class="ar">▲</span></button>
+      <span class="h">Repères</span>
+      <span class="h">Lien</span>
+    </div>
+    <ul class="list" id="releve"></ul>
+    <div class="cols" id="cols" hidden></div>
+    <div class="empty" id="empty" hidden>Aucune offre ne passe ces filtres. Retire un critère pour élargir.</div>
+  </div>
 
   <footer>
-    <p><b>Comment lire.</b> La barre de couleur à gauche donne l'éloignement depuis Belfort : <span style="color:var(--near)">vert ≤ 130 km</span>, <span style="color:var(--mid)">orange 130–400 km</span>, <span style="color:var(--far)">violet &gt; 400 km ou Suisse</span>. Les distances sont des estimations routières. Clique sur une offre pour ouvrir son suivi et sa lettre.</p>
-    <p><b>Retirer une offre</b> ne l'efface pas : elle passe dans « Offres retirées », en haut, et le scan de 10h et 16h ne la remettra pas dans la liste. Le bouton « Remettre dans la liste » annule.</p>
-    <p><b>Le PDF</b> est une lettre formelle A4, marges 22 mm, corps justifié, une page. La police est l'Helvetica intégrée au générateur, pas Calibri : sans tableau, sans image et sans en-tête, elle passe les ATS sans problème.</p>
-    <p><b>Le suivi est enregistré</b> côté serveur : tu retrouves tes statuts et tes lettres sur n'importe quel appareil, et ils survivent aux mises à jour de 10h et 16h.</p>
-    <p><b>Sources balayées.</b> <code>Indeed FR/CH · LinkedIn · Welcome to the Jungle · JobTeaser · Jooble · jobs.ch · iAgora</code> + pages carrières directes <code>GE Vernova · Alstom · Stellantis · Forvia · Schneider · Valeo · Volvo · Danone · Nestlé/Nespresso · ABB · Rolex · Richemont</code>.</p>
+    <p><b>Deux vues, un seul relevé.</b> <b>Relevé</b> trie les offres par distance, par entreprise ou par date de début — clique un en-tête de colonne. <b>Pipeline</b> les range par avancement de ta candidature : la colonne « Pas postulé » est ta liste du jour. Les statuts, les lettres et les filtres sont partagés entre les deux.</p>
+    <p><b>Le filet de couleur à gauche</b> donne l'éloignement depuis Belfort : <span style="color:var(--near)">vert ≤ 130 km</span>, <span style="color:var(--mid)">orange 130–400 km</span>, <span style="color:var(--far)">violet &gt; 400 km ou Suisse</span>. Distances routières approximatives.</p>
+    <p><b>Retirer une offre</b> ne l'efface pas : elle passe dans « Offres retirées » et le scan de 10h et 16h ne la remettra pas dans la liste. « Remettre dans la liste » annule.</p>
+    <p><b>Le PDF</b> est une lettre formelle A4, marges 22 mm, corps justifié, une page, sans tableau ni image : elle passe les ATS. <b>Le suivi est enregistré côté serveur</b> — tes statuts et tes lettres te suivent d'un appareil à l'autre et survivent aux scans.</p>
+    <p><b>Sources balayées.</b> <code>Indeed FR/CH · LinkedIn · Welcome to the Jungle · JobTeaser · Jooble · jobs.ch · jobup.ch · iAgora · HelloWork · APEC</code> + pages carrières directes <code>GE Vernova · Alstom · Stellantis · Forvia · Schneider · Safran · Thales · Airbus · Liebherr · Richemont · Roche · Bosch · Sonceboz</code>.</p>
     <p><b>Toujours vérifier la date.</b> Beaucoup d'offres restent en ligne après pourvoi. La date affichée est celle de publication, pas de clôture.</p>
   </footer>
 </div>
@@ -159,6 +302,26 @@ const OFFERS = [
   {id:"ge-ac-belfort", co:"GE Vernova", role:"Stagiaire Amélioration Continue", place:"Belfort (90)", km:0, zone:1, kind:"stage", start:"à confirmer", posted:"relayé", src:"Workopia", top:true, en:true, url:"https://workopia.io/jobs/a3e6dfbe6e6fa15d38d000cb3aeb1374"},
   {id:"ge-qf-bourogne", co:"GE Vernova", role:"Apprenti·e Ingénieur Qualité Fournisseur H/F", place:"Bourogne (90)", km:12, zone:1, kind:"alt", start:"rentrée", posted:"21.04.2026", src:"Indeed", top:true, en:false, url:"https://to.indeed.com/aaddzk2cdlcb"},
   {id:"cryostar-pm-hesingue", co:"Cryostar", role:"Ingénieur·e Product Management H/F — Stage", place:"Hésingue (68)", km:110, zone:1, kind:"stage", start:"à confirmer", posted:"09.04.2026", src:"Indeed", top:false, en:false, url:"https://to.indeed.com/aa7jbd8crwq7"},
+  {id:"safran-methodes-besancon", co:"Safran Electronics & Defense", role:"Stagiaire Méthodes Production et Amélioration continue F/H", place:"Besançon (25)", km:90, zone:1, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Safran Careers", top:true, en:true, url:"https://www.safran-group.com/jobs/france/besancon/stagiaire-methodes-production-amelioration-continue-fh-118256"},
+  {id:"safran-qualite-besancon", co:"Safran", role:"Stagiaire Qualité F/H", place:"Besançon (25)", km:90, zone:1, kind:"stage", start:"à confirmer — profil visé jeune diplômé Bac+3/4, à vérifier pour un PFE Bac+5", posted:"page carrière", src:"Safran Careers", top:true, en:true, url:"https://www.safran-group.com/fr/offres/france/besancon/stagiaire-qualite-fh-161968"},
+  {id:"liebherr-indus-colmar", co:"Liebherr France", role:"Stagiaire Industrialisation — Amélioration continue H/F", place:"Colmar (68)", km:65, zone:1, kind:"stage", start:"à confirmer", posted:"page carrière", src:"1jeune1solution", top:true, en:true, url:"https://www.1jeune1solution.gouv.fr/stages/stage-stagiaire-industrialisation-amelioration-continue-colmar-stage"},
+  {id:"pok-logistique-vesoul", co:"POK", role:"Stage de fin d'études — Logistique, Expédition, Transport, Facturation H/F", place:"Vesoul (70)", km:65, zone:1, kind:"stage", start:"à confirmer", posted:"page carrière", src:"L'industrie recrute", top:false, en:true, url:"https://www.lindustrie-recrute.fr/candidat/offre/302258"},
+  {id:"vinci-surete-belfort", co:"VINCI Energies", role:"PFE 2027 — Futur Adjoint Responsable d'Affaires Sûreté F/H", place:"Belfort (90)", km:0, zone:1, kind:"stage", start:"2027, mois non précisé", posted:"page carrière", src:"ZipRecruiter (VINCI)", top:true, en:true, url:"https://www.ziprecruiter.fr/jobs/596749594-pfe-2027-futur-adjoint-responsable-d-affaires-surete-f-h-a-vinci-energies"},
+  {id:"faurecia-logistique-bavans", co:"Faurecia (Forvia)", role:"Stagiaire Logistique H/F", place:"Bavans (25)", km:20, zone:1, kind:"stage", start:"flexible : septembre 2026 ou février 2027", posted:"page carrière", src:"JobTeaser", top:true, en:true, url:"https://www.jobteaser.com/en/job-offers/be0c4da1-3982-4c5c-9b68-badb1e778a78-forvia-faurecia-pc-l-intern"},
+  {id:"faurecia-indus-bavans", co:"Faurecia (Forvia)", role:"Stagiaire Ingénieur Industrialisation H/F", place:"Bavans (25)", km:20, zone:1, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Kapstages", top:true, en:true, url:"http://www.kapstages.com/fiche/offre/20033"},
+  {id:"faurecia-alt-ac-sochaux", co:"Faurecia (Forvia)", role:"Apprenti·e Amélioration Continue et Logistique H/F", place:"Sochaux (25)", km:20, zone:1, kind:"alt", start:"rentrée", posted:"page carrière", src:"Faurecia Careers", top:true, en:true, url:"https://jobs.faurecia.com/careers/job/563087416550929-apprenti-e-amelioration-continue-et-logistique-h-f-sochaux-fcm-france?domain=faurecia.com"},
+  {id:"stellantis-logistique-mulhouse", co:"Stellantis", role:"Stage — Pilotage global de l'activité Logistique Usine (site Forge-Fonderie-Mécanique)", place:"Mulhouse (68)", km:45, zone:1, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Stellantis Careers", top:true, en:true, url:"https://careers.stellantis.com/job/22558768/stage-pilotage-globale-de-l-activit-logistique-usine-mulhouse-fr/"},
+  {id:"stellantis-supplychain-mulhouse", co:"Stellantis", role:"Stage Supply Chain, site Stellantis Mulhouse", place:"Mulhouse (68)", km:45, zone:1, kind:"stage", start:"à confirmer", posted:"page carrière", src:"WTTJ", top:true, en:true, url:"https://www.welcometothejungle.com/fr/companies/stellantis-/jobs/stage-supply-chain-site-stellantis-mulhouse_mulhouse"},
+  {id:"schneider-production-dijon", co:"Schneider Electric", role:"Stage — Ingénieur de Production H/F", place:"Dijon (21)", km:130, zone:1, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Schneider Careers", top:true, en:true, url:"https://careers.se.com/jobs/98954?lang=fr-fr"},
+  {id:"schneider-qualite-dijon", co:"Schneider Electric", role:"Stage — Ingénieur Qualité — Bac+5 — Dijon F/H", place:"Dijon (21)", km:130, zone:1, kind:"stage", start:"à confirmer", posted:"page carrière", src:"JobTeaser", top:true, en:true, url:"https://www.jobteaser.com/en/job-offers/74769bd5-efc7-4446-a086-d4bf2f6e78ec-schneider-electric-stage-ingenieur-qualite-dijon-f-h"},
+  {id:"alstom-procedes-belfort", co:"Alstom", role:"Stagiaire Procédés Spéciaux H/F (collage et boulonnage)", place:"Belfort (90)", km:0, zone:1, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Wizbii (Alstom)", top:true, en:true, url:"https://www.wizbii.com/company/alstom/job/stagiaire-procds-spciaux"},
+  {id:"liebherr-qualite-projet-colmar", co:"Liebherr", role:"Stagiaire — Ingénieur Projet Qualité Développement H/F", place:"Colmar (68)", km:90, zone:1, kind:"stage", start:"non précisé, stage de 5 à 6 mois", posted:"page carrière", src:"Liebherr Careers", top:true, en:true, url:"https://www.liebherr.com/fr-int/j/carriere/offres-demploi/81280-fr-5370610"},
+  {id:"liebherr-logistique-expedition-colmar", co:"Liebherr", role:"Stagiaire — Logistique Expédition H/F", place:"Colmar (68)", km:90, zone:1, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Liebherr Careers", top:true, en:true, url:"https://www.liebherr.com/fr-fr/j/carriere/offres-demploi/79464-fr-3714342"},
+  {id:"alstom-supplychain-belfort", co:"Alstom", role:"Alternant Supply Chain H/F", place:"Belfort (90)", km:0, zone:1, kind:"alt", start:"à confirmer", posted:"page carrière", src:"Alstom Careers", top:true, en:true, url:"https://jobsearch.alstom.com/job/Belfort-Alternant-Supply-Chain-HF-90/1397401433/"},
+  {id:"alstom-maintenance-ac-ornans", co:"Alstom", role:"Stage — Maintenance industrielle et amélioration continue F/H", place:"Ornans (25)", km:95, zone:1, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Alstom Careers", top:true, en:true, url:"https://jobsearch.alstom.com/job/Ornans-Stage-Maintenance-industrielle-et-am%C3%A9lioration-continue-FH-I/994312601/"},
+  {id:"alstom-supplychain-methodes-strasbourg", co:"Alstom", role:"Stage Supply Chain — méthode et industrialisation des flux physiques H/F", place:"Strasbourg (67)", km:130, zone:1, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Wizbii (Alstom)", top:true, en:true, url:"https://www.wizbii.com/company/alstom/job/stage-logistique-amlioration-des-flux-physiques-h-f"},
+  {id:"forvia-supplychain-improvement-bavans", co:"Forvia (Faurecia)", role:"Supply Chain Improvement Apprentice H/F", place:"Bavans (25)", km:20, zone:1, kind:"alt", start:"à confirmer", posted:"page carrière", src:"HelloWork", top:true, en:true, url:"https://www.hellowork.com/fr-fr/emplois/78044936.html"},
+  {id:"flowbird-ac-besancon", co:"Flowbird", role:"Stagiaire Ingénieur en amélioration continue", place:"Besançon (25)", km:90, zone:1, kind:"stage", start:"à confirmer", posted:"en ligne", src:"WTTJ", top:false, en:false, url:"https://www.welcometothejungle.com/fr/companies/flowbird-group/jobs/stagiaire-ingenieur-en-amelioration-continue_besancon", isNew:true},
 
   {id:"danone-perf-stjust", co:"Danone", role:"STAGE — Ingénieur performance industrielle (H/F)", place:"Saint-Just-Chaleyssin (38)", km:300, zone:2, kind:"stage", start:"janvier 2027", posted:"12.08.2026", src:"Indeed", top:true, en:false, url:"https://to.indeed.com/aa76dwpb8t7n"},
   {id:"volvo-methodes-venissieux", co:"Volvo Group", role:"Stage Ingénieur — Chargé de mission Méthodes Bac+4/5 (H/F)", place:"Vénissieux (69)", km:320, zone:2, kind:"stage", start:"à confirmer", posted:"19.08.2026", src:"Indeed", top:true, en:true, url:"https://to.indeed.com/aahtlbdmsklt"},
@@ -174,10 +337,58 @@ const OFFERS = [
   {id:"valeo-ac-isledabeau", co:"Valeo", role:"Alternant·e Ingénieur·e Amélioration continue", place:"L'Isle-d'Abeau (38)", km:350, zone:2, kind:"alt", start:"rentrée", posted:"30.03.2026", src:"Indeed", top:true, en:false, url:"https://to.indeed.com/aah64pnw7m8y"},
   {id:"eurofins-ac-marseille", co:"Eurofins", role:"Assistant·e Ingénieur·e Amélioration Continue — stage", place:"Marseille (13)", km:550, zone:2, kind:"stage", start:"à confirmer", posted:"08.06.2026", src:"Indeed", top:true, en:false, url:"https://to.indeed.com/aazccyslty7q"},
   {id:"lir-indus-jonage", co:"L'industrie recrute", role:"Stagiaire Ingénieur Industrialisation — Production H/F", place:"Jonage (69)", km:310, zone:2, kind:"stage", start:"à confirmer", posted:"27.02.2026", src:"Indeed", top:false, en:false, url:"https://to.indeed.com/aatkqgw2hfy9"},
+  {id:"richemont-ac-perf-beaune", co:"Richemont (Manufacture)", role:"Stagiaire — Amélioration continue et Performance Industrielle H/F", place:"Beaune (21)", km:150, zone:2, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Richemont Careers", top:true, en:true, url:"https://careers.richemont.com/fr/offres-demploi/jr130484/stagiaire-amelioration-continue-et-performance-industrielle-hf/"},
+  {id:"stryker-industrialisation-grenoble", co:"Stryker", role:"Stage Ingénieur Industrialisation Produits & Procédés H/F", place:"Grenoble (38)", km:400, zone:2, kind:"stage", start:"février/mars 2027", posted:"page carrière", src:"Dreamwork (Stryker)", top:true, en:true, url:"https://www.dreamworkhq.com/job/2c072f62-d218-438a-82aa-9b20efabbe9e"},
+  {id:"stryker-performance-grenoble", co:"Stryker", role:"Stage Ingénieur Performance Industrielle & Amélioration Continue H/F", place:"Grenoble (38)", km:400, zone:2, kind:"stage", start:"février/mars 2027", posted:"page carrière", src:"Workopia (Stryker)", top:true, en:true, url:"https://workopia.io/jobs/4d321898008ddb741dad8340c42e8933"},
+  {id:"stryker-qualite-grenoble", co:"Stryker", role:"Stage Ingénieur Qualité H/F", place:"Grenoble (38)", km:400, zone:2, kind:"stage", start:"février/mars 2027", posted:"page carrière", src:"Workopia (Stryker)", top:true, en:true, url:"https://workopia.io/jobs/772569bbf524f0975d285fdd6ec1a824"},
+  {id:"bosch-production-venissieux", co:"Bosch", role:"Stage Ingénieur Production H/F", place:"Vénissieux (69)", km:320, zone:2, kind:"stage", start:"à confirmer", posted:"page carrière", src:"SmartRecruiters", top:true, en:true, url:"https://jobs.smartrecruiters.com/BoschGroup/743999789265282-stage-ingenieur-production-h-f-"},
+  {id:"bosch-methodes-venissieux", co:"Bosch", role:"Stage Méthodes Industrielles H/F", place:"Vénissieux (69)", km:320, zone:2, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Wizbii (Bosch)", top:true, en:true, url:"https://www.wizbii.com/company/bosch/job/stage-methodes-industrielles-h-f-venissieux"},
+  {id:"thales-industrialisation-toulouse", co:"Thales", role:"Stage — Ingénieur Industrialisation des processus de fabrication F/H", place:"Toulouse (31)", km:800, zone:2, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Jooble (Thales)", top:true, en:true, url:"https://fr.jooble.org/jdp/5449675652293612163"},
+  {id:"thales-supplychain-toulouse", co:"Thales", role:"Stage Supply Chain", place:"Toulouse (31)", km:800, zone:2, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Thales Careers", top:true, en:true, url:"https://jobs.thalesgroup.com/job/toulouse/stage-supply-chain/1766/15286956"},
+  {id:"airbus-lean-toulouse", co:"Airbus", role:"Internship for Lean & Continuous Improvement definition (m/f)", place:"Toulouse (31)", km:800, zone:2, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Wizbii (Airbus)", top:true, en:true, url:"https://en.wizbii.com/company/airbus/job/internship-for-lean-continuous-improvement-definition-m-f"},
+  {id:"airbus-genieindustriel-toulouse", co:"Airbus", role:"Stage Ingénieur en Génie Industriel", place:"Colomiers (31)", km:800, zone:2, kind:"stage", start:"à confirmer", posted:"page carrière", src:"HelloWork", top:true, en:true, url:"https://www.hellowork.com/fr-fr/emplois/55874293.html"},
+  {id:"safran-ac-toulouse", co:"Safran", role:"Stage — Ingénieur-e Amélioration continue F/H", place:"Toulouse (31)", km:800, zone:2, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Safran Careers", top:true, en:true, url:"https://www.safran-group.com/jobs/france/toulouse/stage-ingenieur-e-amelioration-continue-fh-166219"},
+  {id:"safran-industrialisation-sassenage", co:"Safran", role:"Stage Ingénieur Industrialisation H/F", place:"Sassenage (38)", km:400, zone:2, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Stage.fr", top:true, en:true, url:"https://www.stage.fr/job/9638312/stage-ing%C3%A9nieur-industrialisation-h-f/"},
+  {id:"safran-lean-testedebuch", co:"Safran", role:"Stage Lean Management H/F", place:"La Teste-de-Buch (33)", km:770, zone:2, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Safran Careers", top:true, en:true, url:"https://www.safran-group.com/fr/offres/france/teste-buch/stage-lean-management-hf-96245"},
+  {id:"airliquide-supplychain-sassenage", co:"Air Liquide", role:"Stage — Ingénieur Supply Chain — Projet PowerBI H/F", place:"Sassenage (38)", km:400, zone:2, kind:"stage", start:"à confirmer", posted:"page carrière", src:"JobTeaser", top:true, en:true, url:"https://www.jobteaser.com/fr/job-offers/30cf47c3-bc31-4669-8b41-315e536d4f61-air-liquide-stage-ingenieur-supply-chain-projet-powerbi-h-f"},
+  {id:"arkema-excellence-pierrebenite", co:"Arkema", role:"Stage Ingénieur fin d'étude H/F — Excellence Opérationnelle (6 mois)", place:"Pierre-Bénite (69)", km:325, zone:2, kind:"stage", start:"6 mois, à confirmer", posted:"page carrière", src:"Arkema Careers", top:true, en:true, url:"https://jobs.arkema.com/job/Pierre-B%C3%A9nite-Stage-Ing%C3%A9nieur-fin-d%27%C3%A9tude-HF-Excellence-Op%C3%A9rationnelle-(6-mois)-Auve/1146199701/"},
+  {id:"saintgobain-lean-stquentinfallavier", co:"Saint-Gobain", role:"Stage — Adjoint(e) au Responsable de Production et Chargé(e) de Projets Lean Manufacturing H/F", place:"Saint-Quentin-Fallavier (38)", km:310, zone:2, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Saint-Gobain Careers", top:true, en:true, url:"https://joinus.saint-gobain.com/fr/fra/tpr/i/91710/241927/stage-adjointe-au-responsable-de-prodution-et-chargee-de-projets-lean"},
+  {id:"sanofi-supplychain-lyon", co:"Sanofi", role:"Stage 6 mois — Supply Chain Vaccins", place:"Lyon (69)", km:320, zone:2, kind:"stage", start:"6 mois, à confirmer", posted:"page carrière", src:"WTTJ", top:true, en:true, url:"https://www.welcometothejungle.com/fr/companies/sanofi/jobs/stage-6-mois-supply-chain-vaccins_lyon_SANOF_GD8g9rp"},
+  {id:"larosee-supplychain-lyon", co:"La Rosée", role:"Stagiaire Supply Chain — Approvisionnement & Données", place:"Lyon (69)", km:320, zone:2, kind:"stage", start:"6 mois, à confirmer", posted:"page carrière", src:"WTTJ", top:false, en:false, url:"https://www.welcometothejungle.com/fr/companies/la-rosee/jobs/stagiaire-supply-chain-approvisionnement-donnees_lyon"},
+  {id:"suez-projet-lyon", co:"SUEZ", role:"Stage Césure/PFE — Ingénieur Management de Projets H/F", place:"Lyon (69)", km:320, zone:2, kind:"stage", start:"4 à 6 mois, à confirmer", posted:"page carrière", src:"WTTJ", top:true, en:true, url:"https://www.welcometothejungle.com/fr/companies/suez/jobs/stage-ingenieur-management-de-projets-h-f_lyon_SUEZ_D27rbV0"},
+  {id:"averydennison-production-champsurdrac", co:"Avery Dennison", role:"Stage 6 mois — Ingénieur.e Production (Couchage 1M) H/F", place:"Champ-sur-Drac (38)", km:400, zone:2, kind:"stage", start:"6 mois, à confirmer", posted:"page carrière", src:"Monster", top:true, en:true, url:"https://www.monster.fr/offres-demploi/stage-6-mois-ing%C3%A9nieur-e-production-couchage-1m-h-f-champ-sur-drac-84--34a1573e-3b51-4c7e-b683-9ac70eacb70e"},
+  {id:"alstom-industrialisation-lecreusot", co:"Alstom", role:"Stage chargé d'industrialisation méthodes H/F", place:"Le Creusot (71)", km:220, zone:2, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Alstom Careers", top:true, en:true, url:"https://jobsearch.alstom.com/job/Le-Creusot-Stage-charg%C3%A9-d%27industrialisation-m%C3%A9thodes-(HF)/1125461201/"},
+  {id:"schneider-datascience-grenoble", co:"Schneider Electric", role:"Stage PFE — Ingénieur Data Science / Informatique F/H", place:"Grenoble (38)", km:400, zone:2, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Wizbii (Schneider)", top:true, en:true, url:"https://www.wizbii.com/company/schneider/job/stage-pfe-ingenieur-data-science-informatique-grenoble-h-f-1"},
+  {id:"schneider-supplychain-design-grenoble", co:"Schneider Electric", role:"Stage — Ingénieur Supply Chain Design — Bac+5 (Grenoble) F/H", place:"Grenoble (38)", km:400, zone:2, kind:"stage", start:"à confirmer", posted:"en ligne", src:"JobTeaser", top:true, en:true, url:"https://www.jobteaser.com/fr/job-offers/ae2fa77a-72c5-4a77-aafa-34782092af68-schneider-electric-stage-ingenieur-supply-chain-design-bac-5-grenoble-f-h", isNew:true},
+  {id:"seb-ac-rumilly", co:"Groupe SEB", role:"Stage Ingénieur Amélioration Continue", place:"Rumilly (74)", km:320, zone:2, kind:"stage", start:"non précisé, 6 mois temps plein", posted:"page carrière", src:"Wizbii (Groupe SEB)", top:true, en:false, url:"https://www.wizbii.com/company/groupe-seb/job/stage-ingenieur-amelioration-continue-20"},
+  {id:"accenture-manufacturing-qualite-toulouse", co:"Accenture France", role:"Stage Ingénieur de Projet Manufacturing Engineering et Qualité F/H", place:"Blagnac (31)", km:710, zone:2, kind:"stage", start:"non précisé, stage de fin d'études 6 mois", posted:"page carrière", src:"WTTJ", top:true, en:true, url:"https://www.welcometothejungle.com/fr/companies/accenture-france/jobs/stage-ingenieur-de-projet-manufacturing-engineering-et-qualite-f-h-toulouse_blagnac"},
+  {id:"accenture-supplychain-qualite-toulouse", co:"Accenture France", role:"Stage Ingénieur — Supply Chain & Qualité Toulouse F/H", place:"Blagnac (31)", km:710, zone:2, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Accenture Careers", top:true, en:true, url:"https://accenture.wd103.myworkdayjobs.com/en-US/AccentureCareers/job/Blagnac/Stage-Ingnieur---Supply-Chain---Qualit--Toulouse-F-H_R00297392"},
+  {id:"edf-performance-montpellier", co:"EDF", role:"Stage — Ingénieur Performance F/H", place:"Montpellier (34)", km:615, zone:2, kind:"stage", start:"à confirmer", posted:"page carrière", src:"WTTJ", top:true, en:false, url:"https://www.welcometothejungle.com/fr/companies/edf/jobs/stage-ingenieur-performance-f-h_montpellier"},
+  {id:"heineken-supplychain-marseille", co:"Heineken", role:"Stage — Ingénieur(e) Supply Chain H/F", place:"Marseille (13)", km:630, zone:2, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Heineken Careers", top:true, en:true, url:"https://careers.theheinekencompany.com/France/job/Marseille-Stage-Ing%C3%A9nieur(e)-Supply-Chain-HF-Marseille-(13)-13011/1259082301/"},
+  {id:"framatome-methodes-usinage-saintmarcel", co:"Framatome (EDF)", role:"Stage — Ingénieur Méthodes Usinage F/H", place:"Saint-Marcel (71)", km:230, zone:2, kind:"stage", start:"à confirmer, profil Bac+5 dernière année", posted:"page carrière", src:"Framatome Careers", top:true, en:false, url:"https://www.framatome.com/en/jobseekers/job-offers/stage-ingenieur-methodes-usinage-f-h-ref-2026-25679/"},
+  {id:"framatome-transformation-lignes-saintmarcel", co:"Framatome (EDF)", role:"Stage — Transformation des lignes de production F/H", place:"Saint-Marcel (71)", km:230, zone:2, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Framatome Careers", top:true, en:false, url:"https://www.framatome.com/fr/candidats/offres-emplois/stage-transformation-des-lignes-de-production-f-h-ref-2025-21704/"},
 
   {id:"nespresso-ac-avenches", co:"Nespresso (Nestlé)", role:"Stage — Amélioration continue production, 6 mois", place:"Avenches / Orbe / Romont (CH)", km:130, zone:3, kind:"stage", start:"à confirmer", posted:"page carrière", src:"iAgora", top:true, en:true, url:"https://www.iagora.com/work/en/internships/engineering/switzerland"},
   {id:"nespresso-meca-avenches", co:"Nespresso (Nestlé)", role:"Internship Mechanical Engineering — process & reliability, 6–12 mois", place:"Avenches (CH)", km:130, zone:3, kind:"stage", start:"dernière année", posted:"page carrière", src:"iAgora", top:true, en:true, url:"https://www.iagora.com/work/en/internships/engineering/switzerland"},
-  {id:"jobsch-romandie", co:"Marché suisse romand", role:"265 postes « stagiaire » — filtrer ingénierie / production", place:"Genève · Lausanne · Neuchâtel (CH)", km:150, zone:3, kind:"stage", start:"toutes dates", posted:"flux continu", src:"jobs.ch", top:false, en:true, url:"https://www.jobs.ch/en/vacancies/?region=3&term=stagiaire"}
+  {id:"jaeger-lecoultre-stage-ingenieur-le-sentier", co:"Jaeger-LeCoultre (Richemont)", role:"Stagiaire Ingénieur H/F, 6 mois", place:"Le Sentier (VD, Suisse)", km:140, zone:3, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Richemont Careers", top:true, en:true, url:"https://jobs.richemont.com/Jaeger-LeCoultre/job/Le-Sentier-Stagiaire-Ing%C3%A9nieur-(6-mois)-Le-Sentier-VD/989484501/"},
+  {id:"jaeger-lecoultre-qualite-le-sentier", co:"Jaeger-LeCoultre (Richemont)", role:"Stagiaire Ingénieur Qualité H/F", place:"Le Sentier (VD, Suisse)", km:140, zone:3, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Richemont Careers", top:true, en:true, url:"https://careers.richemont.com/fr/offres-demploi/jr128157/stagiaire-ingenieur-qualite/"},
+  {id:"jaeger-lecoultre-ac-sav-le-sentier", co:"Jaeger-LeCoultre (Richemont)", role:"Stagiaire Ingénieur — Amélioration Continue SAV H/F", place:"Le Sentier (VD, Suisse)", km:140, zone:3, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Richemont Careers", top:true, en:true, url:"https://careers.richemont.com/fr/offres-demploi/jr128164/stagiaire-ingenieur-amelioration-continue-sav/"},
+  {id:"cartier-ac-labo-chauxdefonds", co:"Cartier (Richemont)", role:"Stagiaire Amélioration Continue Laboratoire H/F/X", place:"La Chaux-de-Fonds (NE, Suisse)", km:95, zone:3, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Richemont Careers", top:true, en:true, url:"https://jobs.richemont.com/Cartier/job/La-Chaux-de-Fonds-ENGINEER-TALENTS-DA-Stagiaire-Am%C3%A9lioration-Continue-Laboratoire-(HFX)-NE/1233350801/"},
+  {id:"richemont-excellence-lelocle", co:"Richemont (Cartier)", role:"Stage Ingénieur — Chef de Projet Excellence Industrielle H/F/X", place:"Le Locle (CH)", km:70, zone:3, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Richemont Careers", top:true, en:true, url:"https://jobs.richemont.com/Cartier/job/Le-Locle-Stage-Ing%C3%A9nieur-Chef-de-Projet-Excellence-Industrielle-(HFX)-1-1-NE/1195379001/"},
+  {id:"richemont-supplychain-chauxdefonds", co:"Richemont (Cartier)", role:"Engineer Talents Day — Stagiaire Supply Chain Optimisation Planification H/F/X", place:"La Chaux-de-Fonds (CH)", km:70, zone:3, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Richemont Careers", top:true, en:true, url:"https://jobs.richemont.com/Cartier/job/La-Chaux-de-Fonds-ENGINEER-TALENTS-DAY-Stagiaire-Supply-Chain-Optimisation-Planification-(HFX)-NE/1235977701/"},
+  {id:"roche-qualification-kaiseraugst", co:"Roche", role:"Praktikum — Engineering & SHE Qualification für Studierende (ab Februar 2027)", place:"Kaiseraugst (CH)", km:90, zone:3, kind:"stage", start:"février 2027, min. 9 mois", posted:"page carrière", src:"Roche Careers", top:true, en:true, url:"https://workopia.io/jobs/081277110d0b4ce7c6cfbd6c371d563e"},
+  {id:"roche-verfahrenstechnik-kaiseraugst", co:"Roche", role:"Praktikum für Studierende — Pharmazie / Verfahrenstechnik / Biotechnologie (ab Februar 2027)", place:"Kaiseraugst (CH)", km:90, zone:3, kind:"stage", start:"février 2027, min. 6 mois", posted:"page carrière", src:"Roche Careers", top:true, en:true, url:"https://workopia.io/jobs/fb7ee2a188f72e3f4371d1441c33b636"},
+  {id:"givaudan-efficiency-vernier", co:"Givaudan", role:"Production Efficiency Improvement Trainee (m/w/d)", place:"Vernier / Genève (CH)", km:270, zone:3, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Givaudan Careers", top:true, en:true, url:"https://jobs.givaudan.com/job/Vernier-Production-Efficiency-Improvement-Trainee-(mwd)-1214/1205519101/"},
+  {id:"carandache-metrologie-geneve", co:"Caran d'Ache", role:"Stagiaire en Métrologie — Amélioration des Processus de Contrôle à Réception", place:"Genève / Thônex (CH)", km:270, zone:3, kind:"stage", start:"à confirmer", posted:"page carrière", src:"jobup.ch", top:false, en:false, url:"https://www.jobup.ch/fr/emplois/detail/13fb58b9-185c-4e22-b2ae-607863379955/"},
+  {id:"tavon-supplychain-chauxdefonds", co:"Groupe Tavon", role:"Stage — Optimisation Supply Chain via KPI et digitalisation des processus", place:"La Chaux-de-Fonds (CH)", km:70, zone:3, kind:"stage", start:"à confirmer", posted:"page carrière", src:"jobs.ch", top:false, en:false, url:"https://www.jobs.ch/en/vacancies/detail/eeac872a-e3d8-46de-94a7-cbad4279032d/"},
+  {id:"liebherr-production-bulle", co:"Liebherr Machines Bulle SA", role:"Stagiaire H/F — Technologie de production", place:"Bulle (CH)", km:200, zone:3, kind:"stage", start:"à confirmer", posted:"page carrière", src:"jobs.ch", top:true, en:true, url:"https://www.jobs.ch/en/vacancies/detail/9004999/"},
+  {id:"jobsch-romandie", co:"Marché suisse romand", role:"265 postes « stagiaire » — filtrer ingénierie / production", place:"Genève · Lausanne · Neuchâtel (CH)", km:150, zone:3, kind:"stage", start:"toutes dates", posted:"flux continu", src:"jobs.ch", top:false, en:true, url:"https://www.jobs.ch/en/vacancies/?region=3&term=stagiaire"},
+  {id:"bobst-qualite-mex", co:"Bobst Mex SA", role:"Stage — Qualité en environnement industriel", place:"Mex (CH)", km:225, zone:3, kind:"stage", start:"dès que possible, 6 mois ou plus", posted:"page carrière", src:"jobup.ch", top:true, en:true, url:"https://www.jobup.ch/fr/emplois/detail/4a530850-93a7-43b7-9159-ac2673b7bcca/"},
+  {id:"bosch-productionplanning-zuchwil", co:"Bosch (Scintilla AG)", role:"Internship — International Production Planning", place:"Zuchwil (CH)", km:205, zone:3, kind:"stage", start:"idéalement 01.02.2027, 6,5 mois", posted:"page carrière", src:"SmartRecruiters (Bosch)", top:true, en:true, url:"https://jobs.smartrecruiters.com/BoschGroup/744000056403356-internship-international-production-planning"},
+  {id:"sonceboz-production-ac-soncebozsombeval", co:"Sonceboz Automotive SA", role:"Stage — Ingénieur Production / Amélioration Continue H/F", place:"Sonceboz-Sombeval (CH)", km:140, zone:3, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Sonceboz Careers", top:false, en:true, url:"https://career.sonceboz.com/job/job-stage-ingenieur-production-amelioration-continue-h-f-_340.aspx"},
+  {id:"sonceboz-qualite-soncebozsombeval", co:"Sonceboz Automotive SA", role:"Stage — Ingénieur Qualité H/F", place:"Sonceboz-Sombeval (CH)", km:140, zone:3, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Sonceboz Careers", top:false, en:true, url:"https://career.sonceboz.com/job/job-stage-ingenieur-qualite-h-f-_343.aspx"},
+  {id:"sonceboz-approvisionnement-soncebozsombeval", co:"Sonceboz Automotive SA", role:"Stagiaire Ingénieur(e) Approvisionnement — Amélioration Continue", place:"Sonceboz-Sombeval (CH)", km:140, zone:3, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Sonceboz Careers", top:false, en:true, url:"https://career.sonceboz.com/offre-de-emploi/emploi-stagiaire-ingenieur-e-approvisionnement-amelioration-continue-_422.aspx?LCID=1036"},
+  {id:"sonceboz-produitvieserie-soncebozsombeval", co:"Sonceboz Automotive SA", role:"Stagiaire Ingénieur(e) Produit et Vie Série", place:"Sonceboz-Sombeval (CH)", km:140, zone:3, kind:"stage", start:"à confirmer", posted:"page carrière", src:"Sonceboz Careers", top:false, en:true, url:"https://career.sonceboz.com/offre-de-emploi/job-stagiaire-ingenieur-e-produit-et-vie-serie-_418.aspx?LCID=1036"}
 ];
 
 const ZONES = {
@@ -296,7 +507,6 @@ ${LM_MASTER}
 6. Si l'offre est une alternance et non un stage, dis-le franchement en une phrase au §1 et propose les mêmes missions en stage de fin d'études de six mois.
 7. Une page. Rien après « Rachad NAJIB ».`;
 }
-
 /* ───────── État ───────── */
 let STATE = {};
 let db = null, sample = null, downloads = null;
@@ -329,82 +539,140 @@ async function persist(id, patch){
   return next;
 }
 
+/* ───────── Vues ───────── */
+const EL = new Map();
+const board = document.getElementById("board");
+const releveUl = document.getElementById("releve");
+const colsBox = document.getElementById("cols");
+const emptyBox = document.getElementById("empty");
+
+const COLDEF = [
+  ["todo",    "Pas postulé", "var(--mid)"],
+  ["applied", "Postulé",     "var(--ok)"],
+  ["replied", "Répondu",     "var(--signal)"]
+];
+
+let VIEW = "releve";
+let sortKey = "km", sortDir = 1;
+
+const stOf = o => (STATE[o.id] && STATE[o.id].status) || "todo";
+const isGone = o => !!(STATE[o.id] && STATE[o.id].hidden);
+
+function startRank(o){
+  const s = (o.start || "") + " " + (o.role || "");
+  if(/f[ée]vrier|mars/i.test(s)) return 0;
+  if(/janvier/i.test(s)) return 1;
+  if(isJFM(o)) return 2;
+  return 3;
+}
+
+function cmp(a, b){
+  let d = 0;
+  if(sortKey === "km") d = a.km - b.km;
+  else if(sortKey === "co") d = a.co.localeCompare(b.co, "fr");
+  else d = startRank(a) - startRank(b) || a.km - b.km;
+  return d * sortDir || a.km - b.km || a.co.localeCompare(b.co, "fr");
+}
+
 /* ───────── Construction du DOM, une seule fois ───────── */
-function buildRow(o){
+function buildRow(o, n){
   const li = document.createElement("li");
-  li.className = "offer"; li.dataset.id = o.id;
+  li.className = "offer";
+  li.dataset.id = o.id;
   li.style.setProperty("--band", band(o));
   li.innerHTML = `
     <div class="summary">
-      <div class="band"></div>
-      <div class="body" role="button" tabindex="0" aria-expanded="false">
-        <div class="rowtop"><span class="co">${esc(o.co)}</span><span class="role">${esc(o.role)}</span></div>
-        <div class="meta">
-          <span class="place">📍 ${esc(o.place)}</span>
-          <span class="dist">${o.km===0 ? "sur place" : "≈ " + o.km + " km"}</span>
-          <span>🗓 début : ${esc(o.start)}</span>
-          <span>publié : ${esc(o.posted)}</span>
-        </div>
-        <div class="tags">
+      <span class="band"></span>
+      <div class="sbody" role="button" tabindex="0" aria-expanded="false">
+        <span class="cell idx">${String(n).padStart(2, "0")}</span>
+        <span class="cell main"><span class="co">${esc(o.co)}</span><span class="role">${esc(o.role)}</span></span>
+        <span class="cell place">${esc(o.place)}</span>
+        <span class="cell dist"><span class="kmv">${o.km === 0 ? "sur site" : o.km + " km"}</span><span class="kmbar"><i style="width:${Math.min(100, Math.round(o.km / 800 * 100))}%"></i></span></span>
+        <span class="cell start">${esc(o.start)}</span>
+        <span class="cell flags">
+          ${o.isNew ? '<span class="tag new">Nouveau</span>' : ""}
           ${o.top ? '<span class="tag top">Grand groupe</span>' : ""}
-          ${o.kind==="alt" ? '<span class="tag alt">Alternance, pas un stage</span>' : ""}
-          ${o.zone===3 ? '<span class="tag ch">Suisse · permis G possible</span>' : ""}
-          ${isJFM(o) ? '<span class="tag">Compatible janv–mars</span>' : ""}
+          ${o.kind === "alt" ? '<span class="tag alt">Alternance</span>' : ""}
+          ${o.zone === 3 ? '<span class="tag ch">Suisse</span>' : ""}
+          ${isJFM(o) ? '<span class="tag jfm">Janv–mars</span>' : ""}
           <span class="tag stat" hidden></span>
-        </div>
+        </span>
+        <a class="go" href="${esc(o.url)}" target="_blank" rel="noopener" title="Ouvrir l'offre sur ${esc(o.src)}"><span class="full">Ouvrir l'offre →</span><span class="short">→</span><span class="src">${esc(o.src)}</span></a>
       </div>
-      <a class="go" href="${esc(o.url)}" target="_blank" rel="noopener">Ouvrir l'offre →<span class="src">${esc(o.src)}</span></a>
     </div>
     <div class="detail" hidden>
       <div>
         <div class="blockhead">Où j'en suis</div>
         <div class="statusrow">
-          ${STATUS.map(([k,l]) => `<button class="st ${k}" data-s="${k}" aria-pressed="false">${l}</button>`).join("")}
+          ${STATUS.map(([k, l]) => `<button class="st ${k}" data-s="${k}" aria-pressed="false" type="button">${l}</button>`).join("")}
           <span class="when"></span>
         </div>
       </div>
       <div>
         <div class="blockhead">Lettre de motivation</div>
         <div class="letterbar">
-          <button class="btn gen" data-lang="fr">Générer la lettre (FR)</button>
-          ${o.en ? '<button class="btn ghost gen" data-lang="en">English version</button>' : ""}
-          <button class="btn ghost copy" hidden>Copier</button>
-          <button class="btn ghost pdf" hidden>Télécharger en PDF</button>
+          <button class="btn gen" data-lang="fr" type="button">Générer la lettre (FR)</button>
+          ${o.en ? '<button class="btn ghost gen" data-lang="en" type="button">English version</button>' : ""}
+          <button class="btn ghost copy" hidden type="button">Copier</button>
+          <button class="btn ghost pdf" hidden type="button">Télécharger en PDF</button>
           <span class="lstatus"></span>
         </div>
         <textarea class="letter" hidden spellcheck="false" aria-label="Lettre de motivation pour ${esc(o.co)}"></textarea>
       </div>
       <div class="dropzone">
-        <button class="btn danger drop">Retirer cette offre</button>
-        <button class="btn ghost undrop" hidden>Remettre dans la liste</button>
+        <button class="btn danger drop" type="button">Retirer cette offre</button>
+        <button class="btn ghost undrop" hidden type="button">Remettre dans la liste</button>
       </div>
     </div>`;
   return li;
 }
 
-function buildList(){
-  const res = document.getElementById("results");
-  for(const z of [1,2,3]){
-    const group = OFFERS.filter(o => o.zone===z).sort((a,b) => a.km - b.km);
-    if(!group.length) continue;
-    const sec = document.createElement("section");
-    sec.dataset.zone = z;
-    sec.innerHTML = `<h2 class="zone">${ZONES[z].label} <span class="km">${ZONES[z].km}</span></h2>`;
-    const ul = document.createElement("ul");
-    ul.className = "list";
-    group.forEach(o => ul.appendChild(buildRow(o)));
-    sec.appendChild(ul);
-    res.appendChild(sec);
+function buildAll(){
+  OFFERS.slice().sort((a, b) => a.km - b.km).forEach((o, i) => EL.set(o.id, buildRow(o, i + 1)));
+  colsBox.innerHTML = COLDEF.map(([k, label]) => `
+    <div class="col" data-col="${k}" style="--cc:${COLDEF.find(c => c[0] === k)[2]}">
+      <div class="colhead"><span class="t">${label}</span><span class="n" data-n="${k}">0</span></div>
+      <ul class="list" data-list="${k}"></ul>
+      <div class="colempty" data-empty="${k}" hidden>Rien ici</div>
+    </div>`).join("");
+}
+
+/* ───────── Placement des lignes selon la vue ───────── */
+function placeAll(){
+  const a = document.activeElement;
+  if(a && a.classList && a.classList.contains("letter")) return;
+
+  if(VIEW === "releve"){
+    const frag = document.createDocumentFragment();
+    OFFERS.slice().sort(cmp).forEach(o => { const el = EL.get(o.id); if(el) frag.appendChild(el); });
+    releveUl.appendChild(frag);
+  } else {
+    for(const [k] of COLDEF){
+      const ul = colsBox.querySelector(`ul[data-list="${k}"]`);
+      const frag = document.createDocumentFragment();
+      OFFERS.filter(o => stOf(o) === k).sort((x, y) => x.km - y.km)
+        .forEach(o => { const el = EL.get(o.id); if(el) frag.appendChild(el); });
+      ul.appendChild(frag);
+    }
   }
-  const empty = document.createElement("div");
-  empty.className = "empty"; empty.id = "empty"; empty.hidden = true;
-  empty.textContent = "Aucune offre ne passe ces filtres. Retire un critère pour élargir.";
-  res.appendChild(empty);
+}
+
+function setView(v){
+  VIEW = v;
+  board.classList.toggle("view-releve", v === "releve");
+  board.classList.toggle("view-pipeline", v === "pipeline");
+  releveUl.hidden = v !== "releve";
+  colsBox.hidden = v !== "pipeline";
+  document.querySelectorAll(".vtab").forEach(b =>
+    b.setAttribute("aria-selected", String(b.dataset.view === v)));
+  try{ localStorage.setItem("radar-view", v); }catch(_){}
+  placeAll();
+  recount();
 }
 
 /* ───────── Peinture d'une ligne à partir de l'état ───────── */
 function paintRow(id){
-  const li = document.querySelector(`li.offer[data-id="${CSS.escape(id)}"]`);
+  const li = EL.get(id);
   if(!li) return;
   const st = (STATE[id] && STATE[id].status) || "todo";
   li.querySelectorAll(".st").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.s === st)));
@@ -434,77 +702,130 @@ function paintRow(id){
 }
 
 /* ───────── Filtres et comptage ───────── */
-const filterState = {zone:new Set(), start:new Set(), kind:new Set(), top:new Set(), todo:new Set(), gone:new Set()};
+const filterState = {zone:new Set(), start:new Set(), kind:new Set(), top:new Set(),
+                     new:new Set(), todo:new Set(), gone:new Set()};
+
 function passes(o){
-  const st = (STATE[o.id] && STATE[o.id].status) || "todo";
-  const gone = !!(STATE[o.id] && STATE[o.id].hidden);
-  if(gone !== (filterState.gone.size > 0)) return false;
+  if(isGone(o) !== (filterState.gone.size > 0)) return false;
   if(filterState.zone.size && !filterState.zone.has(String(o.zone))) return false;
   if(filterState.start.size && !isJFM(o)) return false;
   if(filterState.kind.size && o.kind !== "stage") return false;
   if(filterState.top.size && !o.top) return false;
-  if(filterState.todo.size && st !== "todo") return false;
+  if(filterState.new.size && !o.isNew) return false;
+  if(filterState.todo.size && stOf(o) !== "todo") return false;
   return true;
 }
+
 function recount(){
-  let visible = 0;
+  const shown = [];
   for(const o of OFFERS){
-    const li = document.querySelector(`li.offer[data-id="${CSS.escape(o.id)}"]`);
+    const li = EL.get(o.id);
     if(!li) continue;
     const ok = passes(o);
     li.hidden = !ok;
-    if(ok) visible++;
+    if(ok) shown.push(o);
   }
-  document.querySelectorAll("#results section").forEach(sec => {
-    sec.hidden = ![...sec.querySelectorAll("li.offer")].some(li => !li.hidden);
-  });
-  document.getElementById("empty").hidden = visible > 0;
 
-  const shown = OFFERS.filter(passes);
-  const stOf = o => (STATE[o.id] && STATE[o.id].status) || "todo";
+  emptyBox.hidden = shown.length > 0;
+  releveUl.hidden = VIEW !== "releve" || shown.length === 0;
+  colsBox.hidden = VIEW !== "pipeline";
+  document.getElementById("thead").style.visibility = shown.length ? "" : "hidden";
+
+  if(VIEW === "pipeline"){
+    for(const [k, , ] of COLDEF){
+      const n = shown.filter(o => stOf(o) === k).length;
+      colsBox.querySelector(`[data-n="${k}"]`).textContent = n;
+      colsBox.querySelector(`[data-empty="${k}"]`).hidden = n > 0;
+    }
+  }
+
   const counts = [
-    ["Offres retenues", shown.length],
-    ["≤ 130 km de Belfort", shown.filter(o => o.zone !== 2).length],
+    ["Offres au relevé", shown.length],
+    ["≤ 130 km de Belfort", shown.filter(o => o.km <= 130).length],
     ["Postulé", shown.filter(o => stOf(o) !== "todo").length],
     ["Reste à traiter", shown.filter(o => stOf(o) === "todo").length]
   ];
-  document.getElementById("counts").innerHTML = counts.map(([k,v]) =>
+  document.getElementById("counts").innerHTML = counts.map(([k, v]) =>
     `<div class="count"><div class="v">${v}</div><div class="k">${k}</div></div>`).join("");
 
-  const live = OFFERS.filter(o => !(STATE[o.id] && STATE[o.id].hidden));
-  const tally = [["n-z1",o=>o.zone===1],["n-z2",o=>o.zone===2],["n-z3",o=>o.zone===3],
-                 ["n-jfm",isJFM],["n-st",o=>o.kind==="stage"],["n-top",o=>o.top],
-                 ["n-todo",o=>stOf(o)==="todo"]];
+  const live = OFFERS.filter(o => !isGone(o));
+  const tally = [["n-z1", o => o.zone === 1], ["n-z2", o => o.zone === 2], ["n-z3", o => o.zone === 3],
+                 ["n-jfm", isJFM], ["n-st", o => o.kind === "stage"], ["n-top", o => o.top],
+                 ["n-new", o => o.isNew], ["n-todo", o => stOf(o) === "todo"]];
   for(const [elId, fn] of tally) document.getElementById(elId).textContent = live.filter(fn).length;
 
+  const newCount = live.filter(o => o.isNew).length;
+  document.getElementById("chip-new").hidden = newCount === 0 && filterState.new.size === 0;
+
   const goneCount = OFFERS.length - live.length;
-  const goneChip = document.getElementById("showgone");
-  goneChip.hidden = goneCount === 0 && filterState.gone.size === 0;
+  document.getElementById("showgone").hidden = goneCount === 0 && filterState.gone.size === 0;
   document.getElementById("n-gone").textContent = goneCount;
+
+  document.getElementById("cart-total").textContent =
+    live.length + " offres · " + live.filter(o => stOf(o) === "todo").length + " à traiter";
+
+  const anyFilter = Object.values(filterState).some(s => s.size > 0);
+  document.getElementById("reset").hidden = !anyFilter;
 }
 
 /* ───────── Interactions ───────── */
+document.querySelector(".views").addEventListener("click", e => {
+  const b = e.target.closest(".vtab");
+  if(b) setView(b.dataset.view);
+});
+
+function saveFilters(){
+  try{
+    localStorage.setItem("radar-filters", JSON.stringify(
+      Object.fromEntries(Object.entries(filterState).map(([k, s]) => [k, [...s]]))));
+  }catch(_){}
+}
+
 document.getElementById("filters").addEventListener("click", e => {
-  const b = e.target.closest(".chip"); if(!b) return;
+  const b = e.target.closest(".chip");
+  if(!b) return;
   const f = b.dataset.f, v = b.dataset.v, on = b.getAttribute("aria-pressed") === "true";
   b.setAttribute("aria-pressed", String(!on));
   if(on) filterState[f].delete(v); else filterState[f].add(v);
-  try{ localStorage.setItem("radar-filters", JSON.stringify(
-    Object.fromEntries(Object.entries(filterState).map(([k,s]) => [k, [...s]])))); }catch(_){}
+  saveFilters();
   recount();
 });
 
+document.getElementById("reset").addEventListener("click", () => {
+  for(const s of Object.values(filterState)) s.clear();
+  document.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", "false"));
+  saveFilters();
+  recount();
+});
+
+document.getElementById("thead").addEventListener("click", e => {
+  const th = e.target.closest("button[data-sort]");
+  if(!th) return;
+  const k = th.dataset.sort;
+  sortDir = (k === sortKey) ? -sortDir : 1;
+  sortKey = k;
+  document.querySelectorAll("#thead button[data-sort]").forEach(t => {
+    t.removeAttribute("aria-sort");
+    t.querySelector(".ar").textContent = "▲";
+  });
+  th.setAttribute("aria-sort", sortDir === 1 ? "ascending" : "descending");
+  th.querySelector(".ar").textContent = sortDir === 1 ? "▲" : "▼";
+  placeAll();
+});
+
 function toggleDetail(li){
-  const d = li.querySelector(".detail"), body = li.querySelector(".body");
+  const d = li.querySelector(".detail"), sb = li.querySelector(".sbody");
   d.hidden = !d.hidden;
-  body.setAttribute("aria-expanded", String(!d.hidden));
+  sb.setAttribute("aria-expanded", String(!d.hidden));
 }
 
-document.getElementById("results").addEventListener("click", async e => {
-  const li = e.target.closest("li.offer"); if(!li) return;
+board.addEventListener("click", async e => {
+  const li = e.target.closest("li.offer");
+  if(!li) return;
   const id = li.dataset.id, o = byId.get(id);
 
-  if(e.target.closest(".body")){ toggleDetail(li); return; }
+  if(e.target.closest(".go")) return;
+  if(e.target.closest(".sbody")){ toggleDetail(li); return; }
 
   const stBtn = e.target.closest(".st");
   if(stBtn){
@@ -512,10 +833,12 @@ document.getElementById("results").addEventListener("click", async e => {
     const patch = {status: s};
     if(s !== "todo" && !(STATE[id] && STATE[id].appliedAt)){
       const d = new Date();
-      patch.appliedAt = String(d.getDate()).padStart(2,"0") + "." + String(d.getMonth()+1).padStart(2,"0") + "." + d.getFullYear();
+      patch.appliedAt = String(d.getDate()).padStart(2, "0") + "." +
+        String(d.getMonth() + 1).padStart(2, "0") + "." + d.getFullYear();
     }
     if(s === "todo") patch.appliedAt = "";
     persist(id, patch);
+    if(VIEW === "pipeline") placeAll();
     return;
   }
 
@@ -524,7 +847,8 @@ document.getElementById("results").addEventListener("click", async e => {
     const ta = li.querySelector(".letter");
     try{
       await navigator.clipboard.writeText(ta.value);
-      copyBtn.textContent = "Copié"; setTimeout(() => copyBtn.textContent = "Copier", 1600);
+      copyBtn.textContent = "Copié";
+      setTimeout(() => copyBtn.textContent = "Copier", 1600);
     }catch(_){
       ta.focus(); ta.select();
       li.querySelector(".lstatus").textContent = "Copie automatique bloquée. Le texte est sélectionné : Ctrl+C.";
@@ -540,20 +864,20 @@ document.getElementById("results").addEventListener("click", async e => {
   if(gen) generate(li, o, gen);
 });
 
-document.getElementById("results").addEventListener("keydown", e => {
-  if((e.key === "Enter" || e.key === " ") && e.target.classList.contains("body")){
-    e.preventDefault(); toggleDetail(e.target.closest("li.offer"));
+board.addEventListener("keydown", e => {
+  if((e.key === "Enter" || e.key === " ") && e.target.classList.contains("sbody")){
+    e.preventDefault();
+    toggleDetail(e.target.closest("li.offer"));
   }
 });
 
-document.getElementById("results").addEventListener("blur", e => {
+board.addEventListener("blur", e => {
   const ta = e.target.closest && e.target.closest(".letter");
   if(!ta) return;
   const li = ta.closest("li.offer"), id = li.dataset.id, lang = ta.dataset.lang || "fr";
   const stored = (STATE[id] && STATE[id]["letter_" + lang]) || "";
   if(ta.value && ta.value !== stored) persist(id, {["letter_" + lang]: ta.value});
 }, true);
-
 /* ───────── Génération de la lettre ───────── */
 const running = new Map();
 const lastGen = new Map();
@@ -730,17 +1054,22 @@ async function makePdf(li, o, btn){
 }
 
 /* ───────── Démarrage ───────── */
-buildList();
+buildAll();
 STATE = loadLocal();
+
 try{
   const saved = JSON.parse(localStorage.getItem("radar-filters") || "{}");
   for(const [k, arr] of Object.entries(saved)) if(filterState[k]) arr.forEach(v => filterState[k].add(v));
   document.querySelectorAll(".chip").forEach(c => {
-    if(filterState[c.dataset.f] && filterState[c.dataset.f].has(c.dataset.v)) c.setAttribute("aria-pressed","true");
+    if(filterState[c.dataset.f] && filterState[c.dataset.f].has(c.dataset.v)) c.setAttribute("aria-pressed", "true");
   });
 }catch(_){}
+
 OFFERS.forEach(o => paintRow(o.id));
-recount();
+
+let startView = "releve";
+try{ if(localStorage.getItem("radar-view") === "pipeline") startView = "pipeline"; }catch(_){}
+setView(startView);
 
 const useCap = n => (window.claude && window.claude.use) ? window.claude.use(n).catch(() => null) : Promise.resolve(null);
 
@@ -756,7 +1085,11 @@ const useCap = n => (window.claude && window.claude.use) ? window.claude.use(n).
         const body = d.data(); if(!body) continue;
         STATE[d.id] = body; paintRow(d.id); touched = true;
       }
-      if(touched){ saveLocal(); recount(); }
+      if(touched){
+        saveLocal();
+        if(VIEW === "pipeline") placeAll();
+        recount();
+      }
     }, err => {
       if(err && err.code === "revoked") note("L'enregistrement serveur a été interrompu. Le suivi continue dans ce navigateur seulement.");
       else note("La synchronisation du suivi est interrompue. Recharge la page pour la relancer.");
